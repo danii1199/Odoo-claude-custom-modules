@@ -10,8 +10,9 @@ Hay dos caminos. Prefiere el primero; usa el segundo si el usuario te lo pide a 
 ## A. El usuario lo hace solo (sin Claude)
 
 Pestaña **Actualizar** de la web: arrastrar el marcador «⟳ Actualizar Fuerta» a favoritos, abrir
-webapp.fuertafit.com con sesión y pulsarlo. Solo trae rutinas nuevas. Código: `static/bookmarklet.js` y
-`static/sync.html`. Si falla, revisa esos dos archivos y `POST /api/catalog/import` en `server.py`.
+webapp.fuertafit.com con sesión y pulsarlo. Solo trae rutinas nuevas. Código: `app/views/static/bookmarklet.js` y
+`app/views/static/sync.html`. Si falla, revisa esos dos archivos y `POST /api/catalog/import`
+(`app/controllers/catalog_controller.py` → `app/models/catalog.py`).
 
 ## B. Hacerlo tú con Claude in Chrome
 
@@ -33,7 +34,7 @@ Reglas: **nunca pidas ni teclees la contraseña**; el usuario inicia sesión él
 6. Lanza la extracción **en segundo plano dentro de la página** (`window.__ffjob = {...}`, bucle async con 300 ms de
    pausa entre peticiones, parar en 401) y consulta el progreso con llamadas cortas. Así gasta pocos tokens.
    En pestaña de fondo va a ~60/min. Para un refresco, pide solo los ids que no estén en `GET /api/catalog/ids`.
-7. Campos por rutina (los de `core.RAW_FIELDS`): `id, title, url, durationMinutes, format (postDuration.name),
+7. Campos por rutina (los de `app.models.catalog.RAW_FIELDS`): `id, title, url, durationMinutes, format (postDuration.name),
    intensity, location (trainingLocation), trainingType (.name), materials ([].material.name), trainers
    ([].trainer.name), tags, summary (smallDescription sin HTML), description (largeDescription sin HTML, 800 chars),
    valuation, totalViews, publishDate, previewImage`.

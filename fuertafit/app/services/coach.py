@@ -1,10 +1,15 @@
-"""Entrenador con Claude: conversa, consulta el catálogo/historial y planifica días en el calendario."""
+"""Entrenador con Claude (latente: solo se activa con ANTHROPIC_API_KEY).
+
+Conversa, consulta el catálogo/historial y planifica días en el calendario con herramientas."""
 import json
 import os
 import re
 from datetime import date, timedelta
 
-import core
+from app.models import catalog, plans
+from app.models.history import recent_history
+from app.models.settings import get_settings
+from app.services.generator import generate
 
 try:
     import anthropic
@@ -131,7 +136,7 @@ def _date(value):
 
 def _run_tool(name, args, changed):
     if name == "buscar_rutinas":
-        res = core.search(q=args.get("texto"), types=args.get("tipos"), intensities=args.get("intensidades"),
+        res = catalog.search(q=args.get("texto"), types=args.get("tipos"), intensities=args.get("intensidades"),
                           materials=args.get("materiales"), min_minutes=args.get("min_minutos"),
                           max_minutes=args.get("max_minutos"), methodology=args.get("zona"),
                           limit=min(int(args.get("limite") or 20), 40))
@@ -139,7 +144,7 @@ def _run_tool(name, args, changed):
         return f"{res['total']} rutinas encajan; mostrando {len(lines)}:\n" + "\n".join(lines)
 
     if name == "proponer_combinacion":
-        res = core.generate({"minutes": args["minutos"], "types": args.get("tipos"),
+        res = generate({"minutes": args["minutos"], "types": args.get("tipos"),
                              "intensities": args.get("intensidades"), "materials": args.get("materiales"),
                              "warmup": args.get("calentamiento", False), "cooldown": args.get("estiramiento", False)})
         lines = [_line(it) for it in res["blocks"]]
@@ -147,34 +152,34 @@ def _run_tool(name, args, changed):
 
     if name == "ver_historial":
         days = int(args.get("dias") or 14)
-        rows = core.recent_history(days)
+        rows = recent_history(days)
         if not rows:
             return f"No hay nada marcado como hecho en los últimos {days} días."
-        return "\n".join(f"{d}: " + (_line(core.BY_ID[pid]) if pid in core.BY_ID else f"#{pid}") for pid, d in rows)
+        return "\n".join(f"{d}: " + (_line(catalog.BY_ID[pid]) if pid in catalog.BY_ID else f"#{pid}") for pid, d in rows)
 
     if name == "ver_calendario":
-        plans = core.get_plans(_date(args["desde"]), _date(args["hasta"]))
-        if not plans:
+        found = plans.get_plans(_date(args["desde"]), _date(args["hasta"]))
+        if not found:
             return "No hay nada planificado en esas fechas."
         out = []
-        for day, p in plans.items():
+        for day, p in found.items():
             out.append(f"{day}{' — ' + p['note'] if p['note'] else ''}")
-            out += ["  " + _line(core.BY_ID[pid]) for pid in p["postIds"] if pid in core.BY_ID]
+            out += ["  " + _line(catalog.BY_ID[pid]) for pid in p["postIds"] if pid in catalog.BY_ID]
         return "\n".join(out)
 
     if name == "guardar_plan":
         day = _date(args["fecha"])
-        unknown = [i for i in args["ids"] if int(i) not in core.BY_ID]
+        unknown = [i for i in args["ids"] if int(i) not in catalog.BY_ID]
         if unknown:
             raise ValueError(f"Estos ids no existen en el catálogo: {unknown}. Búscalos con buscar_rutinas.")
-        ids = core.save_plan(day, args["ids"], args.get("nota"), source="bot")
+        ids = plans.save_plan(day, args["ids"], args.get("nota"), source="bot")
         changed.add(day)
-        total = sum(core.BY_ID[i]["durationMinutes"] for i in ids)
+        total = sum(catalog.BY_ID[i]["durationMinutes"] for i in ids)
         return f"Guardado {day}: {len(ids)} rutinas, {total} min."
 
     if name == "borrar_plan":
         day = _date(args["fecha"])
-        core.delete_plan(day)
+        plans.delete_plan(day)
         changed.add(day)
         return f"Borrado el plan del {day}."
 
@@ -183,7 +188,7 @@ def _run_tool(name, args, changed):
 
 def _context():
     today = date.today()
-    settings = core.get_settings()
+    settings = get_settings()
     week = ", ".join(f"{WEEKDAYS[(today + timedelta(d)).weekday()]} {today + timedelta(d)}" for d in range(7))
     ctx = f"[Contexto] Hoy es {WEEKDAYS[today.weekday()]} {today.isoformat()}. Próximos días: {week}."
     if settings["preferences"]:

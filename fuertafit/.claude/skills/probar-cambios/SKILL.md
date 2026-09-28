@@ -13,11 +13,13 @@ El usuario **no quiere que se restauren ni recreen** datos que haya borrado: dej
 ```bash
 SP=<scratchpad>/t && mkdir -p $SP && cp data/catalogo.json $SP/ && rm -f $SP/historial.db
 DATA_DIR=$SP python3 - <<'EOF'
-import sys; sys.path.insert(0, '/media/dani/DANI-DATA/proyectitos/fuertafit')
-import core          # DATA_DIR se lee al importar: define la variable antes
-print(core.meta()['groups'])
-print(core.generate({"minutes": 30, "groups": ["Cardio", "Core"], "seed": 1}))
-print(core.plan_week('2026-11-02'))
+import sys; sys.path.insert(0, '/media/dani/DANI-DATA/proyectitos/claude-test/fuertafit')
+from app.models import catalog          # DATA_DIR se lee al importar: define la variable antes
+from app.services.generator import generate
+from app.services.planner import plan_week
+print(catalog.meta()['groups'])
+print(generate({"minutes": 30, "groups": ["Cardio", "Core"], "seed": 1}))
+print(plan_week('2026-11-02'))
 EOF
 ```
 
@@ -42,8 +44,14 @@ Después: restaura, compara (`json.load` igual) y `sg docker -c "docker compose 
   ventana emergente: crea un botón temporal y pulsa con `computer` (clic real).
 - Si aparece "Cannot access a chrome-extension:// URL of different extension", otra extensión tapa la pestaña:
   no insistas, sigue con `curl` y avisa al usuario.
-- Sin navegador, comprueba al menos la sintaxis del JS: extrae los `<script>` de `static/index.html` y
-  `static/sync.html` a archivos en el scratchpad y ejecuta
-  `sg docker -c "docker run --rm -v <scratchpad>:/c:ro node:20-alpine node --check /c/page.js"` (no hay node en el sistema).
+- Sin navegador, comprueba al menos la sintaxis del JS (no hay node en el sistema): copia `app/views/static/js/*.js`
+  al scratchpad y ejecuta `sg docker -c "docker run --rm -v <scratchpad>:/c:ro node:20-alpine node --check /c/hoy.js"`.
+  Concaténalos en orden de carga para detectar nombres declarados dos veces entre archivos.
+
+## 5. Refactors: comparar la API antes y después
+
+Arranca la versión vieja y la nueva con copias idénticas de `data/` y la misma semilla
+(`PYTHONPATH` con un `sitecustomize.py` que haga `random.seed(12345)`), recorre la API con el mismo script
+y compara las respuestas y el contenido final de `historial.db`. Así se validó el paso a MVC.
 - Las funciones de los módulos están expuestas: `Hoy`, `Cal` (`select`, `move`, `skip`, `generate`), `Week`,
   `Cat`, `Sync`. Útiles para probar desde `javascript_tool`.

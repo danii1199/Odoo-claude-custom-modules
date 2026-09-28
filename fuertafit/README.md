@@ -19,7 +19,7 @@ se conservan aunque borres o reconstruyas el contenedor.
 ## Arrancar sin Docker
 
 ```bash
-python3 server.py
+python3 -m app
 ```
 
 Solo usa la librería estándar de Python. Variables opcionales: `HOST`, `PORT`, `DATA_DIR`.
@@ -30,14 +30,13 @@ Copia `.env.example` a `.env`, pon tu `ANTHROPIC_API_KEY` y reinicia con `docker
 Sin clave todo funciona igual salvo el chat; la rutina automática diaria usa entonces el generador por reglas.
 El modelo se cambia con `ANTHROPIC_MODEL` en `.env`.
 
-## Archivos
+## Estructura (MVC)
 
-- `server.py`: servidor HTTP y tarea de rutina automática diaria.
-- `core.py`: catálogo, generador, historial, calendario y ajustes.
-- `bot.py`: entrenador (Claude + herramientas sobre el catálogo, historial y calendario).
-- `static/index.html`: la web (Hoy, Calendario, Rutinas, Entrenador).
-- `data/catalogo.json`: metadatos de las rutinas con vídeo.
-- `data/historial.db`: SQLite con lo hecho, lo planificado y los ajustes (se crea sola).
+- `app/models/`: datos (SQLite y catálogo). `app/services/`: lógica (generador, plan semanal, calendario, bot).
+- `app/controllers/`: rutas `/api/*`. `app/views/`: JSON para la web y la web estática (`static/`).
+- `data/catalogo.json`: metadatos de las rutinas con vídeo. `data/historial.db`: hecho, planificado y ajustes.
+
+Detalle en `CLAUDE.md`.
 
 ## Acceso desde la red local
 
@@ -50,4 +49,4 @@ contraseña: cualquiera de tu red puede usarla. Para limitarla a este ordenador,
 
 Pestaña **Actualizar** de la web: arrastra el marcador «⟳ Actualizar Fuerta» a la barra de marcadores, abre
 webapp.fuertafit.com con la sesión iniciada y púlsalo. Descarga solo las rutinas nuevas (con tu sesión, desde tu
-navegador) y las envía a `/api/catalog/import`. El código del marcador está en `static/bookmarklet.js`.
+navegador) y las envía a `/api/catalog/import`. El código del marcador está en `app/views/static/bookmarklet.js`.
