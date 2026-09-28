@@ -1,12 +1,13 @@
-"""Catálogo de rutinas de FuertaFit (data/catalogo.json): carga, clasificación, búsqueda e importación.
+"""Catálogo de rutinas de FuertaFit (tabla `catalog` de Postgres): carga, clasificación, búsqueda e importación.
 
 `CATALOG` y `BY_ID` se reasignan al recargar: úsalos siempre como `catalog.CATALOG` / `catalog.BY_ID`.
 """
-import json
 import re
 from datetime import datetime
 
-from app.config import CATALOG_PATH
+from psycopg.types.json import Jsonb
+
+from app.models.db import connect
 from app.models.settings import save_settings
 
 # Tipos que no cuentan como "bloque principal" salvo que se pidan expresamente.
@@ -29,7 +30,7 @@ GROUPS = [g for g, _ in GROUP_RULES]
 # no se proponen nunca, pero siguen en el buscador.
 SKIP_RX = re.compile(r"fuertakids|test de|embaraz|suelo p[eé]lvico|postparto|posparto|prenatal", re.IGNORECASE)
 
-# Campos que se guardan en catalogo.json por rutina (lo demás se calcula al cargar).
+# Campos que se guardan de cada rutina (lo demás se calcula al cargar).
 RAW_FIELDS = ["id", "title", "url", "durationMinutes", "format", "intensity", "location", "trainingType",
               "materials", "trainers", "tags", "summary", "description", "valuation", "totalViews",
               "publishDate", "previewImage"]
@@ -60,10 +61,13 @@ def _field(desc, label):
     return value[:30] or None
 
 
+def _raw_items():
+    with connect() as conn:
+        return [row[0] for row in conn.execute("SELECT data FROM catalog ORDER BY id")]
+
+
 def load_catalog():
-    if not CATALOG_PATH.exists():
-        return []
-    items = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+    items = _raw_items()
     for it in items:
         desc = it.get("description", "")
         it["methodology"] = _field(desc, "Metodología")
@@ -92,30 +96,28 @@ def material_ok(it, mats):
 
 
 def catalog_ids():
-    """Ids ya guardados en el archivo (incluidos los que se filtran al cargar)."""
-    if not CATALOG_PATH.exists():
-        return []
-    return [it["id"] for it in json.loads(CATALOG_PATH.read_text(encoding="utf-8"))]
+    """Ids ya guardados (incluidos los que se filtran al cargar)."""
+    with connect() as conn:
+        return [row[0] for row in conn.execute("SELECT id FROM catalog ORDER BY id")]
 
 
 def import_items(items):
-    """Añade o actualiza rutinas en catalogo.json. Devuelve cuántas son nuevas y cuántas se actualizaron."""
-    raw = json.loads(CATALOG_PATH.read_text(encoding="utf-8")) if CATALOG_PATH.exists() else []
-    by_id = {it["id"]: it for it in raw}
+    """Añade o actualiza rutinas. Devuelve cuántas son nuevas y cuántas se actualizaron."""
+    known = set(catalog_ids())
+    rows = []
     added = updated = 0
     for it in items:
         if not isinstance(it, dict) or not isinstance(it.get("id"), int) or not isinstance(it.get("title"), str):
             continue
         clean = {k: it.get(k) for k in RAW_FIELDS}
         clean["url"] = POST_URL + str(it["id"])  # nunca confiamos en la URL que llega
-        if it["id"] in by_id:
+        if it["id"] in known:
             updated += 1
         else:
             added += 1
-        by_id[it["id"]] = clean
-    tmp = CATALOG_PATH.with_suffix(".tmp")
-    tmp.write_text(json.dumps(list(by_id.values()), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    tmp.replace(CATALOG_PATH)  # escritura atómica
+        rows.append((it["id"], Jsonb(clean)))
+    with connect() as conn:  # todo en una transacción: o entran todas o ninguna
+        conn.executemany("INSERT INTO catalog (id, data) VALUES (?, ?) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data", rows)
     reload_catalog()
     save_settings({"catalogUpdated": datetime.now().isoformat(timespec="minutes")})
     return {"added": added, "updated": updated, "total": len(CATALOG)}

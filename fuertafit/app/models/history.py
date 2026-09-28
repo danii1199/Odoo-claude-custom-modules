@@ -25,8 +25,7 @@ def mark_done(post_ids, day=None):
     with connect() as conn:
         # Una misma rutina solo cuenta una vez por día.
         conn.executemany(
-            "INSERT INTO history (post_id, done_on) SELECT ?1, ?2 WHERE NOT EXISTS"
-            " (SELECT 1 FROM history WHERE post_id = ?1 AND done_on = ?2)",
+            "INSERT INTO history (post_id, done_on) VALUES (?, ?) ON CONFLICT DO NOTHING",
             [(int(pid), day) for pid in post_ids],
         )
 

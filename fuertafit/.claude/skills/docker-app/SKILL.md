@@ -11,7 +11,7 @@ sesión puede no tener aún el grupo `docker` activo (sin él da "permission den
 | Qué | Comando |
 |---|---|
 | Aplicar cambios de código (`app/`) | `sg docker -c "docker compose up -d --build"` |
-| Solo recargar datos (`catalogo.json`, `.env`) | `sg docker -c "docker compose restart"` |
+| Tras cambiar `.env` (`restart` no lo relee) | `sg docker -c "docker compose up -d --force-recreate"` |
 | Estado | `sg docker -c "docker compose ps"` |
 | Logs | `sg docker -c "docker compose logs --tail 30"` |
 | Comprobar | `curl -s localhost:8000/api/meta \| head -c 200` |
@@ -20,8 +20,8 @@ sesión puede no tener aún el grupo `docker` activo (sin él da "permission den
 
 - `app/` (incluida la web en `app/views/static/`) va **dentro de la imagen**: cambiarla requiere `--build`, no basta `restart`.
 - Tras reconstruir se pierden los logs del contenedor anterior; si necesitas auditar peticiones, míralos antes.
-- El contenedor corre como `user: "1000:1000"`. No lo quites: como root deja archivos de root en `data/`
-  (si pasa, se pueden borrar y recrear porque la carpeta es del usuario).
+- Los datos están en Postgres (`../postgres`, contenedor `postgres`): tiene que estar arrancado antes. Red externa
+  `proyectitos`. Copia de seguridad: `sg docker -c "docker exec postgres pg_dump -U admin rutinas" > rutinas.sql`.
 - No uses `pkill -f "python3 -m app"`: el patrón coincide con tu propia shell y la mata (exit 144). Para
   pruebas sin Docker usa otro puerto y guarda el PID: `(PORT=8001 DATA_DIR=... python3 -m app & echo $! > pid)`.
 - Puerto publicado en toda la LAN (`8000:8000`). IP actual del PC: `hostname -I` (era 192.168.0.146).

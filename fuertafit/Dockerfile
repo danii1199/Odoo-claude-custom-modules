@@ -12,7 +12,6 @@ COPY app ./app
 
 ENV HOST=0.0.0.0 \
     PORT=8000 \
-    DATA_DIR=/data \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     TZ=Europe/Madrid

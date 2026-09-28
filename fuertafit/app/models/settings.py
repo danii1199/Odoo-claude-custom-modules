@@ -29,7 +29,7 @@ def get_settings():
 def save_settings(values):
     with connect() as conn:
         conn.executemany(
-            "INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)",
+            "INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
             [(k, json.dumps(v)) for k, v in values.items() if k in DEFAULT_SETTINGS],
         )
     return get_settings()

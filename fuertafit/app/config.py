@@ -3,9 +3,8 @@ import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = Path(os.environ.get("DATA_DIR", ROOT / "data"))
-CATALOG_PATH = DATA_DIR / "catalogo.json"
-DB_PATH = DATA_DIR / "historial.db"
+# PostgreSQL del contenedor `postgres` (ver ../postgres). En Docker viene del .env del proyecto.
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://rutinas@127.0.0.1:5432/rutinas")
 STATIC_DIR = Path(__file__).resolve().parent / "views" / "static"
 
 # En Docker se escucha en 0.0.0.0; en local basta con 127.0.0.1.

@@ -8,13 +8,14 @@ Generador de rutinas diarias a partir del catálogo de FuertaFit. Solo enlaza a 
 docker compose up -d --build
 ```
 
-Abre http://localhost:8000. La carpeta `data/` se monta en el contenedor, así que el catálogo y el historial
-se conservan aunque borres o reconstruyas el contenedor.
+Necesita el contenedor `postgres` en marcha (`../postgres`, `docker compose up -d` allí primero) y un `.env` con
+`DATABASE_URL` (ver `.env.example`). Abre http://localhost:8000. Los datos (catálogo, historial, calendario, ajustes)
+viven en Postgres y se conservan aunque borres el contenedor o vuelvas a clonar el repo.
 
 - Ver logs: `docker compose logs -f`
 - Parar: `docker compose down`
 - Tras cambiar código: `docker compose up -d --build`
-- Tras sustituir `data/catalogo.json`: `docker compose restart`
+- Tras cambiar `.env`: `docker compose up -d --force-recreate`
 
 ## Arrancar sin Docker
 
@@ -32,9 +33,9 @@ El modelo se cambia con `ANTHROPIC_MODEL` en `.env`.
 
 ## Estructura (MVC)
 
-- `app/models/`: datos (SQLite y catálogo). `app/services/`: lógica (generador, plan semanal, calendario, bot).
+- `app/models/`: datos (Postgres). `app/services/`: lógica (generador, plan semanal, calendario, bot).
 - `app/controllers/`: rutas `/api/*`. `app/views/`: JSON para la web y la web estática (`static/`).
-- `data/catalogo.json`: metadatos de las rutinas con vídeo. `data/historial.db`: hecho, planificado y ajustes.
+- Datos: base de datos `rutinas` del contenedor `postgres` (volumen `postgres-datos`, fuera del repo).
 
 Detalle en `CLAUDE.md`.
 

@@ -20,7 +20,8 @@ def get_status(start, end):
 
 def set_status(start, end, status, note=None):
     with connect() as conn:
-        conn.executemany("INSERT OR REPLACE INTO day_status (day, status, note) VALUES (?, ?, ?)",
+        conn.executemany("INSERT INTO day_status (day, status, note) VALUES (?, ?, ?)"
+                         " ON CONFLICT (day) DO UPDATE SET status = EXCLUDED.status, note = EXCLUDED.note",
                          [(d, status, note) for d in days_between(start, end)])
 
 

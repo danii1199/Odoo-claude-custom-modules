@@ -1,6 +1,6 @@
 ---
 name: actualizar-catalogo
-description: Vuelve a extraer o actualizar el catálogo de rutinas de FuertaFit (data/catalogo.json) usando la sesión del usuario en Chrome. Úsala cuando pida "actualizar rutinas", "recoger datos de nuevo", "hay rutinas nuevas en FuertaFit" o cuando el catálogo falte o esté corrupto.
+description: Vuelve a extraer o actualizar el catálogo de rutinas de FuertaFit (tabla `catalog` de Postgres) usando la sesión del usuario en Chrome. Úsala cuando pida "actualizar rutinas", "recoger datos de nuevo", "hay rutinas nuevas en FuertaFit" o cuando el catálogo falte o esté corrupto.
 ---
 
 # Actualizar el catálogo de FuertaFit
@@ -41,7 +41,6 @@ Reglas: **nunca pidas ni teclees la contraseña**; el usuario inicia sesión él
 8. Para llevar los datos al disco, elige una:
    - **Refresco:** `fetch` no llega a localhost desde la página de FuertaFit. Usa `window.open` de `/sync.html` +
      `postMessage` (hace falta un clic real: crea un botón temporal y púlsalo con `computer`), o
-   - **Completo:** pide permiso al usuario y descarga un Blob `fuertafit-catalogo.json` (~1,9 MB) a `~/Descargas`.
-     Muévelo a `data/catalogo.json` (antes, copia de seguridad del actual) y reinicia:
-     `sg docker -c "docker compose restart"`.
+   - **Completo:** mismo mecanismo que el refresco (ventana `/sync.html` + `postMessage`): con el catálogo vacío,
+     `GET /api/catalog/ids` devuelve [] y se envían todas. No hace falta descargar archivos.
 9. Comprueba el resultado: `curl -s localhost:8000/api/meta` (total y grupos). Luego deja la pestaña como estaba.
