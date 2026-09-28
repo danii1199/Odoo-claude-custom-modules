@@ -1,0 +1,14 @@
+services:
+  rutinas:
+    build: .
+    container_name: fuertafit-rutinas
+    user: "1000:1000"           # tu usuario: así los archivos de data/ siguen siendo tuyos
+    ports:
+      - "8000:8000"             # accesible desde tu red local (http://IP-de-este-PC:8000)
+      # Para volver a solo este ordenador: "127.0.0.1:8000:8000"
+    volumes:
+      - ./data:/data            # catálogo, historial, calendario y ajustes (persisten fuera del contenedor)
+    env_file:
+      - path: .env              # ANTHROPIC_API_KEY para el entrenador (opcional)
+        required: false
+    restart: unless-stopped
