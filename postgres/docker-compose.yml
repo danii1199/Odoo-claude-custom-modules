@@ -1,0 +1,30 @@
+# Base de datos compartida de mis proyectos (una base de datos y un usuario por proyecto).
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      RUTINAS_PASSWORD: ${RUTINAS_PASSWORD}
+      MYSPOTY_PASSWORD: ${MYSPOTY_PASSWORD}
+      TZ: Europe/Madrid
+    volumes:
+      - pgdata:/var/lib/postgresql/data        # volumen de Docker: fuera del repo, no se borra al clonar/limpiar
+      - ./init:/docker-entrypoint-initdb.d:ro  # crea las bases de datos la primera vez
+    ports:
+      - "127.0.0.1:5432:5432"                  # solo este PC (para DBeaver, psql…); los contenedores entran por la red
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 5s
+      retries: 10
+    restart: unless-stopped
+    networks: [proyectitos]
+
+volumes:
+  pgdata:
+    name: postgres-datos
+
+networks:
+  proyectitos:
+    external: true   # red compartida: docker network create proyectitos

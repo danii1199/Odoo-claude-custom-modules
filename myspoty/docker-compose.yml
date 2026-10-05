@@ -1,0 +1,21 @@
+services:
+  myspoty:
+    build: .
+    container_name: myspoty
+    user: "1000:1000"
+    ports:
+      # Abierto a la red de casa (http://IP-de-este-PC:8001). Sin contraseña: cualquiera en tu wifi puede
+      # controlar tu Spotify. Solo este ordenador: "127.0.0.1:8001:8001".
+      # El login con Spotify solo funciona entrando por http://127.0.0.1:8001 (en este PC); los demás PC usan
+      # la misma sesión. En http://IP no suena en el navegador (Spotify exige HTTPS), pero sí controla otros dispositivos.
+      - "8001:8001"
+    env_file:
+      - path: .env               # SPOTIFY_CLIENT_ID y DATABASE_URL (Postgres)
+        required: true
+    restart: unless-stopped
+    networks: [proyectitos]
+
+# Red compartida con el contenedor `postgres` (../postgres) y otros proyectos: http://myspoty:8001
+networks:
+  proyectitos:
+    external: true
