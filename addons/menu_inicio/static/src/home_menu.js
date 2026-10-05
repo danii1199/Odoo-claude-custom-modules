@@ -72,8 +72,9 @@ export class HomeMenu extends Component {
         return q ? this.apps.filter((a) => norm(a.name).includes(q)) : this.apps;
     }
 
+    /** Solo se cierra si detrás hay una app que corresponde a la URL actual. */
     get canClose() {
-        return !!this.menuService.getCurrentApp();
+        return !homeMenu.standalone() && !!this.menuService.getCurrentApp();
     }
 
     async open(menu) {

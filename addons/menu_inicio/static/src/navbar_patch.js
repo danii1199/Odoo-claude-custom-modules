@@ -11,8 +11,8 @@ patch(NavBar.prototype, {
     set homeMenuIsOpen(_) {},
 
     onHomeMenuToggle() {
-        // Sin app abierta (recién entrado) no hay nada a lo que volver: se queda abierto.
-        if (homeMenu.isOpen() && !this.menuService.getCurrentApp()) {
+        // Sin app detrás que corresponda a la URL (recién entrado o vuelto a /odoo con «Atrás»): se queda abierto.
+        if (homeMenu.isOpen() && (homeMenu.standalone() || !this.menuService.getCurrentApp())) {
             return;
         }
         homeMenu.toggle();
