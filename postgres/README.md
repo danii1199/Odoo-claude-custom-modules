@@ -1,6 +1,7 @@
 # Postgres compartido
 
-Una base de datos y un usuario por proyecto: `rutinas` (fuertafit) y `myspoty`. Los datos viven en el volumen
+Una base de datos y un usuario por proyecto: `fuertafit` (Odoo, rol `odoo`), `rutinas` (web antigua de
+fuertafit, ya migrada a Odoo) y `myspoty`. Los datos viven en el volumen
 Docker `postgres-datos`, **fuera del repo**: clonar, limpiar o borrar la carpeta no los toca.
 
 ```bash

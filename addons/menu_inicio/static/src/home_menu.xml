@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="menu_inicio.HomeMenu">
+        <div t-if="this.homeMenu.isOpen()" class="o_menu_inicio">
+            <div class="o_menu_inicio_inner container">
+                <div class="o_menu_inicio_search">
+                    <i class="oi" data-icon="search" aria-hidden="true"/>
+                    <input t-ref="this.search" type="search" placeholder="Buscar un menú…"
+                           t-att-value="this.state.query" t-on-input="this.onInput" t-on-keydown="this.onSearchKeydown"
+                           aria-label="Buscar un menú"/>
+                </div>
+
+                <!-- Resultados de búsqueda: menús con su ruta -->
+                <ul t-if="this.state.query.trim()" class="o_menu_inicio_results list-unstyled">
+                    <li t-foreach="this.results" t-as="r" t-key="r.menu.id"
+                        t-att-class="{ focused: r_index === this.state.focused }"
+                        t-on-click="() => this.open(r.menu)" t-out="r.label"/>
+                    <li t-if="!this.results.length" class="o_menu_inicio_empty">Ningún menú coincide.</li>
+                </ul>
+
+                <!-- Cuadrícula de aplicaciones -->
+                <div t-else="" class="o_menu_inicio_apps">
+                    <a t-foreach="this.filteredApps" t-as="app" t-key="app.id"
+                       class="o_menu_inicio_app" t-att-class="{ focused: app_index === this.state.focused and this.state.query }"
+                       t-att-href="'/odoo/' + (app.actionPath or ('action-' + app.actionID))"
+                       t-att-data-menu-xmlid="app.xmlid"
+                       t-on-click.prevent="() => this.open(app)">
+                        <img t-if="app.webIconData" class="o_menu_inicio_icon" t-att-src="app.webIconData" alt=""/>
+                        <div t-else="" class="o_menu_inicio_icon o_menu_inicio_icon_built"
+                             t-attf-style="background-color: {{app.iconBg or '#875a7b'}}; color: {{app.iconColor or '#fff'}};">
+                            <i t-att-class="app.iconClass"/>
+                        </div>
+                        <span class="o_menu_inicio_name" t-out="app.name"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

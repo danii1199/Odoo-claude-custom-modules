@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ajustes de cada usuario: los mismos que «Plan semanal» y «min por defecto» de la web. -->
+<odoo>
+    <record id="settings_view_form" model="ir.ui.view">
+        <field name="name">fuerta.settings.form</field>
+        <field name="model">fuerta.settings</field>
+        <field name="arch" type="xml">
+            <form string="Mis ajustes">
+                <sheet>
+                    <div class="oe_title"><h1>Mis ajustes</h1></div>
+                    <group>
+                        <group string="Cada sesión">
+                            <field name="daily_minutes"/>
+                            <field name="warmup"/>
+                            <field name="cooldown"/>
+                            <field name="materials" placeholder="Mancuernas, Esterilla…"/>
+                        </group>
+                        <group string="Plan automático">
+                            <field name="auto_plan"/>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Semana tipo (sin grupos = descanso)">
+                        <group>
+                            <field name="week_0" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="week_1" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="week_2" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="week_3" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="week_4" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="week_5" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="week_6" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group string="Entrenador con IA (solo si está activado)">
+                        <field name="preferences" nolabel="1" colspan="2" placeholder="Objetivos, días que no entrenas, molestias…"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_my_settings" model="ir.actions.server">
+        <field name="name">Mis ajustes</field>
+        <field name="model_id" ref="model_fuerta_settings"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_my_settings()</field>
+    </record>
+</odoo>

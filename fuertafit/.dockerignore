@@ -1,7 +1,0 @@
-data
-.env
-.venv
-**/__pycache__
-*.md
-.claude
-.git

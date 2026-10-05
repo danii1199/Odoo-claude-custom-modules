@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Entrada «Mi rutina» en el menú del sitio web (editable luego desde Sitio web → Menús). -->
+<odoo noupdate="1">
+    <record id="website_menu_fuerta" model="website.menu">
+        <field name="name">Mi rutina</field>
+        <field name="url">/fuerta</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">20</field>
+    </record>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Grupos musculares / enfoques: los mismos nombres que services/catalog.py (GROUP_RULES). -->
+<odoo noupdate="0">
+    <record id="group_calentamiento" model="fuerta.group"><field name="name">Calentamiento</field><field name="sequence">1</field></record>
+    <record id="group_cuerpo_mente" model="fuerta.group"><field name="name">Cuerpo-Mente</field><field name="sequence">2</field></record>
+    <record id="group_core" model="fuerta.group"><field name="name">Core</field><field name="sequence">3</field></record>
+    <record id="group_pierna" model="fuerta.group"><field name="name">Pierna y glúteo</field><field name="sequence">4</field></record>
+    <record id="group_torso" model="fuerta.group"><field name="name">Torso</field><field name="sequence">5</field></record>
+    <record id="group_fullbody" model="fuerta.group"><field name="name">Fullbody</field><field name="sequence">6</field></record>
+    <record id="group_cardio" model="fuerta.group"><field name="name">Cardio</field><field name="sequence">7</field></record>
+</odoo>
