@@ -6,7 +6,7 @@
         <field name="target">self</field>
     </record>
 
-    <menuitem id="menu_root" name="Mi rutina Fuerta" action="action_plan" web_icon="fuertafit,static/description/icon.png" sequence="1"/>
+    <menuitem id="menu_root" name="Mi rutina Fuerta" action="action_plan" groups="group_fuerta_user" web_icon="fuertafit,static/description/icon.png" sequence="1"/>
     <menuitem id="menu_web" name="Abrir la web" parent="menu_root" action="action_open_web" sequence="1"/>
     <menuitem id="menu_data" name="Mis datos" parent="menu_root" sequence="10"/>
     <menuitem id="menu_plan" name="Planificado" parent="menu_data" action="action_plan" sequence="1"/>

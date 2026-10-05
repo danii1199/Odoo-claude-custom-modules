@@ -5,7 +5,7 @@ vídeos; no descarga nada. Cada usuario de Odoo tiene su calendario, historial y
 
 ## Uso
 
-Odoo (ver el `README.md` de la raíz) → base `fuertafit` → menú **Mi rutina Fuerta**, o directamente
+Odoo (ver el `README.md` de la raíz) → base `claude-main` → menú **Mi rutina Fuerta**, o directamente
 `http://IP-de-este-PC:8000/fuerta`. Pestañas: Hoy, Semana, Calendario, Rutinas, Actualizar (y Entrenador solo con
 API key). En Odoo, **Mis datos** y **Catálogo** muestran lo mismo en listas.
 
@@ -18,7 +18,7 @@ navegador) y las envía a `/fuerta/api/catalog/import`.
 ## Tras cambiar código (desde la raíz del repo)
 
 ```bash
-docker compose exec odoo odoo module upgrade -d fuertafit fuertafit && docker compose restart odoo
+docker compose exec odoo odoo module upgrade -d claude-main fuertafit && docker compose restart odoo
 ```
 
 ## Migrar desde la web antigua
@@ -26,7 +26,7 @@ docker compose exec odoo odoo module upgrade -d fuertafit fuertafit && docker co
 La web anterior guardaba los datos en la base `rutinas`. Para pasarlos a tu usuario de Odoo (solo lee `rutinas`):
 
 ```bash
-docker compose exec -T -e MIGRAR_LOGIN=admin odoo odoo shell -d fuertafit --no-http < addons/fuertafit/scripts/migrar_rutinas.py
+docker compose exec -T -e MIGRAR_LOGIN=admin odoo odoo shell -d claude-main --no-http < addons/fuertafit/scripts/migrar_rutinas.py
 ```
 
 ## Entrenador con IA (opcional, de pago)

@@ -42,6 +42,19 @@ class Req:
         return int(value) if value else default
 
 
+GROUP = "fuertafit.group_fuerta_user"
+
+
+def _allowed():
+    """Solo quien está en «Mi rutina Fuerta / Usuario» (security/groups.xml) usa la web y la API."""
+    return request.env.user.has_group(GROUP)
+
+
+def _forbidden():
+    return request.make_response("No tienes acceso a Mi rutina Fuerta.", status=403,
+                                 headers=[("Content-Type", "text/plain; charset=utf-8")])
+
+
 def _page(name):
     """Página HTML suelta de static/web (sin el layout del sitio web): solo /fuerta/sync, la ventanita del marcador."""
     html = (WEB_DIR / name).read_text(encoding="utf-8").replace("__V__", VERSION)
@@ -53,6 +66,8 @@ def _api(handler):
     web no puede mandarlo sin permiso del navegador (protección CSRF, ya que estas rutas no llevan token)."""
     hr = request.httprequest
     try:
+        if not _allowed():
+            raise HttpError(403, "No tienes acceso a Mi rutina Fuerta")
         body = {}
         if hr.method == "POST":
             if hr.mimetype != "application/json":
@@ -84,10 +99,14 @@ class FuertaWeb(http.Controller):
     # ---------- páginas ----------
     @http.route("/fuerta", type="http", auth="user", methods=["GET"], website=True)
     def index(self, **kw):
+        if not _allowed():
+            return _forbidden()
         return request.render("fuertafit.app_page", {"v": VERSION})
 
     @get("/fuerta/sync")
     def sync(self, **kw):
+        if not _allowed():
+            return _forbidden()
         return _page("sync.html")
 
     # ---------- catálogo ----------

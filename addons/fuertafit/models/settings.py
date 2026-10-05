@@ -116,6 +116,8 @@ class FuertaSettings(models.Model):
     def _cron_auto_plan(self):
         """Cada 30 min: a quien tenga el plan automático, rellenarle los días vacíos de la semana."""
         for rec in self.sudo().search([("auto_plan", "=", True), ("user_id.active", "=", True)]):
+            if not rec.user_id.has_group("fuertafit.group_fuerta_user"):
+                continue  # ya no tiene acceso al módulo
             env = self.env(user=rec.user_id.id, su=False)
             try:
                 with self.env.cr.savepoint():  # que el fallo de un usuario no afecte a los demás

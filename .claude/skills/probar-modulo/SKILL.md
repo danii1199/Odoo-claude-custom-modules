@@ -11,7 +11,7 @@ añaden lo específico de cada módulo.
 ## 1. Base de pruebas
 
 ```bash
-docker compose exec -T odoo odoo db duplicate -n fuertafit fuertafit_test   # copia neutralizada (sin crons ni correos)
+docker compose exec -T odoo odoo db duplicate -n claude-main fuertafit_test   # copia neutralizada (sin crons ni correos)
 docker compose exec -T odoo odoo module upgrade -d fuertafit_test <modulo>  # aplica tu código a la copia
 # … pruebas …
 docker compose exec -T odoo odoo db drop fuertafit_test

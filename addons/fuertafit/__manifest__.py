@@ -3,12 +3,13 @@
     "summary": "Genera y planifica rutinas diarias con el catálogo de vídeos de FuertaFit",
     "description": "Solo enlaza a los vídeos de FuertaFit; nunca los descarga. "
                    "Cada usuario tiene su calendario, historial y ajustes; el catálogo es común.",
-    "version": "20.0.1.1.0",
+    "version": "20.0.1.2.0",
     "category": "Productivity",
     "author": "danii1199",
     "license": "LGPL-3",
     "depends": ["base", "web", "website"],
     "data": [
+        "security/groups.xml",
         "security/ir.access.csv",
         "data/ir_cron.xml",
         "data/groups.xml",

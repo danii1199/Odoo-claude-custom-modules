@@ -23,7 +23,8 @@ services/        lógica sin HTTP que recibe `env`: catalog.py (grupos con GROUP
 controllers/     main.py: /fuerta (página del sitio web), /fuerta/sync (ventana del marcador) y /fuerta/api/* (JSON)
 views/           web_templates.xml (la página /fuerta), vistas del backend, asistentes, menus.xml
 data/            ir_cron.xml (plan automático), groups.xml (7 grupos), website_menu.xml («Mi rutina» en el menú web)
-security/        ir.access.csv: catálogo y grupos lectura; plan/historial/estados/ajustes solo los propios
+security/        groups.xml (grupo de acceso), ir.access.csv: catálogo y grupos lectura; plan/historial/estados/ajustes
+                 solo los propios; todo exige el grupo
 static/web/      css/app.css (todo bajo .fuerta-app), js/<pestaña>.js, sync.html, bookmarklet.js
 scripts/         migrar_rutinas.py (rutinas → Odoo; solo lee la base antigua; se lanza con `odoo shell`)
 ```
@@ -50,9 +51,16 @@ Catálogo → Rutinas (lectura) e Importar rutinas (mismo JSON que el marcador).
 los dos usan los mismos modelos y métodos (`save_plan`, `mark_done`, `planner.plan_week`, `calendar.set_away`…).
 Si añades algo a la web, añade su equivalente en el backend (y al revés).
 
+## Acceso (2026-10-05: «el de entrenamiento solo lo ve Dani»)
+
+- Grupo `fuertafit.group_fuerta_user` («Mi rutina Fuerta / Usuario», `security/groups.xml`), con Dani
+  (`base.user_admin`). Lo exigen `ir.access.csv`, el menú raíz, el menú web «Mi rutina» (todas sus copias por sitio)
+  y el controlador (`_allowed()`: 403 en `/fuerta`, `/fuerta/sync` y `/fuerta/api/*`). El cron se salta a quien no lo
+  tenga. Para dar acceso a otro usuario: Ajustes → Usuarios → «Mi rutina Fuerta: Usuario».
+
 ## Detalles
 
-- Multiusuario: catálogo común; lo demás por usuario (`user_id`, `default=self.env.user`, dominio en ir.access).
+- Multiusuario (entre quienes tienen el grupo): catálogo común; lo demás por usuario (`user_id`, dominio en ir.access).
 - `services/catalog.get(env)` cachea el catálogo clasificado por base y lo recarga si cambia la tabla.
 - `_api(handler)`: JSON, `HttpError` → status; POST solo `Content-Type: application/json` (protección CSRF).
 - Ajustes: `values` (JSON) es la fuente de verdad (lo usa la web); los campos del formulario se calculan de él y lo
@@ -71,6 +79,6 @@ Solo estáticos: recargar el navegador. Web: `http://IP-de-este-PC:8000/fuerta`.
 
 ## Normas
 
-- **No tocar los datos reales** (base `fuertafit`) sin pedirlo: skill `probar-cambios` (base `fuertafit_test`).
+- **No tocar los datos reales** (base `claude-main`) sin pedirlo: skill `probar-cambios` (base `fuertafit_test`).
 - No restaurar ni recrear datos que el usuario haya borrado. Nada que requiera API de pago.
 - Código y textos en español, mismo estilo que el existente. Catálogo desde FuertaFit: skill `actualizar-catalogo`.
