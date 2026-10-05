@@ -21,14 +21,17 @@ addons/<modulo>/          nombre técnico = nombre de la carpeta (snake_case)
 1. Esqueleto del módulo: `__init__.py`, `__manifest__.py`, `models/`, `views/` (+ `menus.xml`), `security/ir.access.csv`,
    `static/description/icon.png`. Puedes partir de `odoo scaffold <modulo> /tmp/x` dentro del contenedor y copiar,
    pero adapta a las convenciones de `CLAUDE.md` (Odoo 20: `ir.access`, `models.Constraint`, `<list>`).
-2. Manifest: `"version": "20.0.1.0.0"`, `"author": "danii1199"`, `"license": "LGPL-3"`, `"depends": ["base", ...]`.
-3. No hay que tocar `docker-compose.yml`: `addons/` entero está montado. Tras crear el módulo,
+2. Acceso: `security/groups.xml` con su categoría, privilegio y grupo «Usuario» (y «Administrador» si hace falta),
+   `user_ids` = `base.user_admin` (Dani). Cárgalo antes de `ir.access.csv` y úsalo en permisos, menú raíz y web
+   (ver `addons/fuertafit/security/groups.xml`). Nada visible para `base.group_user` en general.
+3. Manifest: `"version": "20.0.1.0.0"`, `"author": "danii1199"`, `"license": "LGPL-3"`, `"depends": ["base", ...]`.
+4. No hay que tocar `docker-compose.yml`: `addons/` entero está montado. Tras crear el módulo,
    `sg docker -c "docker compose restart odoo"` para que Odoo lo vea (`odoo module list` o Aplicaciones → Actualizar lista).
-4. Dependencias Python: línea `RUN pip install ...` en el `Dockerfile` indicando el módulo, y `up -d --build`.
+5. Dependencias Python: línea `RUN pip install ...` en el `Dockerfile` indicando el módulo, y `up -d --build`.
    Secretos/variables: en `.env` + `.env.example` + `environment:` del servicio `odoo` (solo lo que necesite).
-5. Instala en una base de pruebas primero (skill `probar-modulo`), y en la real solo cuando el usuario lo diga:
+6. Instala en una base de pruebas primero (skill `probar-modulo`), y en la real solo cuando el usuario lo diga:
    `docker compose exec -T odoo odoo module install -d <bd> <modulo>` + `restart odoo`.
-6. Escribe `addons/<modulo>/CLAUDE.md` y sus skills (mínimo `probar-cambios`), y añade el proyecto a la estructura del
+7. Escribe `addons/<modulo>/CLAUDE.md` y sus skills (mínimo `probar-cambios`), y añade el proyecto a la estructura del
    `CLAUDE.md` raíz y al `README.md`.
 
 ## Portar una app existente (como se hizo con fuertafit)

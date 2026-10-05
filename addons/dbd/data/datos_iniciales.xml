@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Datos de ejemplo para arrancar: los personajes originales (2016), sus perks, algunos perks generales,
+     reinos, mapas, complementos y ofrendas. Nombres del juego en inglés; textos resumidos en español.
+     noupdate: si los editas no se pisan al actualizar el módulo. -->
+<odoo noupdate="1">
+    <record id="tag_aura" model="dbd.perk.tag">
+        <field name="name">Aura</field>
+        <field name="color">1</field>
+    </record>
+    <record id="tag_agotamiento" model="dbd.perk.tag">
+        <field name="name">Agotamiento</field>
+        <field name="color">2</field>
+    </record>
+    <record id="tag_curacion" model="dbd.perk.tag">
+        <field name="name">Curación</field>
+        <field name="color">3</field>
+    </record>
+    <record id="tag_reparacion" model="dbd.perk.tag">
+        <field name="name">Reparación</field>
+        <field name="color">4</field>
+    </record>
+    <record id="tag_sigilo" model="dbd.perk.tag">
+        <field name="name">Sigilo</field>
+        <field name="color">5</field>
+    </record>
+    <record id="tag_maleficio" model="dbd.perk.tag">
+        <field name="name">Maleficio</field>
+        <field name="color">6</field>
+    </record>
+    <record id="tag_persecucion" model="dbd.perk.tag">
+        <field name="name">Persecución</field>
+        <field name="color">7</field>
+    </record>
+    <record id="tag_ganchos" model="dbd.perk.tag">
+        <field name="name">Ganchos</field>
+        <field name="color">8</field>
+    </record>
+    <record id="tag_informacion" model="dbd.perk.tag">
+        <field name="name">Información</field>
+        <field name="color">9</field>
+    </record>
+    <record id="tag_velocidad" model="dbd.perk.tag">
+        <field name="name">Velocidad</field>
+        <field name="color">10</field>
+    </record>
+    <record id="survivor_dwight" model="dbd.survivor">
+        <field name="name">Dwight Fairfield</field>
+        <field name="sequence">1</field>
+        <field name="release_date">2016-06-14</field>
+        <field name="description" type="html"><p>Jefe de equipo nervioso e inseguro que, en la niebla, descubre que sabe mantener unido al grupo.</p></field>
+    </record>
+    <record id="survivor_meg" model="dbd.survivor">
+        <field name="name">Meg Thomas</field>
+        <field name="sequence">2</field>
+        <field name="release_date">2016-06-14</field>
+        <field name="description" type="html"><p>Atleta incansable que corre cada mañana por el bosque; en la niebla, su velocidad la mantiene con vida.</p></field>
+    </record>
+    <record id="survivor_claudette" model="dbd.survivor">
+        <field name="name">Claudette Morel</field>
+        <field name="sequence">3</field>
+        <field name="release_date">2016-06-14</field>
+        <field name="description" type="html"><p>Botánica tímida y brillante que conoce las propiedades curativas de las plantas.</p></field>
+    </record>
+    <record id="survivor_jake" model="dbd.survivor">
+        <field name="name">Jake Park</field>
+        <field name="sequence">4</field>
+        <field name="release_date">2016-06-14</field>
+        <field name="description" type="html"><p>Solitario que dejó la vida que le habían planeado para vivir en el bosque, lejos de todo.</p></field>
+    </record>
+    <record id="killer_trapper" model="dbd.killer">
+        <field name="name">The Trapper</field>
+        <field name="real_name">Evan MacMillan</field>
+        <field name="power_name">Trampa para osos</field>
+        <field name="sequence">1</field>
+        <field name="difficulty">easy</field>
+        <field name="speed">4.6</field>
+        <field name="terror_radius">32</field>
+        <field name="height">tall</field>
+        <field name="release_date">2016-06-14</field>
+        <field name="power_description" type="html"><p>Coloca trampas para osos por el mapa. El superviviente que pisa una queda atrapado hasta que se libera o lo liberan.</p></field>
+        <field name="description" type="html"><p>Capataz de la finca MacMillan, cumplió con brutalidad todo lo que su padre le ordenó.</p></field>
+    </record>
+    <record id="killer_wraith" model="dbd.killer">
+        <field name="name">The Wraith</field>
+        <field name="real_name">Philip Ojomo</field>
+        <field name="power_name">Campana del lamento</field>
+        <field name="sequence">2</field>
+        <field name="difficulty">easy</field>
+        <field name="speed">4.6</field>
+        <field name="terror_radius">32</field>
+        <field name="height">tall</field>
+        <field name="release_date">2016-06-14</field>
+        <field name="power_description" type="html"><p>Hace sonar su campana para volverse invisible y moverse más rápido; al salir del sigilo puede atacar con velocidad extra.</p></field>
+        <field name="description" type="html"><p>Trabajador de un desguace que acabó convertido en el espectro que caza en la niebla.</p></field>
+    </record>
+    <record id="killer_hillbilly" model="dbd.killer">
+        <field name="name">The Hillbilly</field>
+        <field name="real_name">Max Thompson Jr.</field>
+        <field name="power_name">Motosierra</field>
+        <field name="sequence">3</field>
+        <field name="difficulty">hard</field>
+        <field name="speed">4.6</field>
+        <field name="terror_radius">32</field>
+        <field name="height">tall</field>
+        <field name="release_date">2016-06-14</field>
+        <field name="power_description" type="html"><p>Arranca la motosierra para lanzarse en un sprint imparable que derriba de un golpe al superviviente que alcanza.</p></field>
+        <field name="description" type="html"><p>Encerrado toda su vida por sus padres en la granja Thompson, un día se liberó.</p></field>
+    </record>
+    <record id="perk_bond" model="dbd.perk">
+        <field name="name">Bond</field>
+        <field name="role">survivor</field>
+        <field name="sequence">1</field>
+        <field name="description" type="html"><p>Ves el aura de los demás supervivientes que están cerca de ti.</p></field>
+        <field name="survivor_id" ref="survivor_dwight"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_aura'), ref('tag_informacion')])]"/>
+    </record>
+    <record id="perk_prove_thyself" model="dbd.perk">
+        <field name="name">Prove Thyself</field>
+        <field name="role">survivor</field>
+        <field name="sequence">2</field>
+        <field name="description" type="html"><p>Reparas más rápido por cada superviviente que repara cerca de ti y ganas puntos de sangre extra por cooperar.</p></field>
+        <field name="survivor_id" ref="survivor_dwight"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_reparacion')])]"/>
+    </record>
+    <record id="perk_leader" model="dbd.perk">
+        <field name="name">Leader</field>
+        <field name="role">survivor</field>
+        <field name="sequence">3</field>
+        <field name="description" type="html"><p>Los supervivientes cercanos hacen más rápido acciones como reparar, curar o abrir cofres.</p></field>
+        <field name="survivor_id" ref="survivor_dwight"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_reparacion')])]"/>
+    </record>
+    <record id="perk_quick_quiet" model="dbd.perk">
+        <field name="name">Quick &amp; Quiet</field>
+        <field name="role">survivor</field>
+        <field name="sequence">4</field>
+        <field name="description" type="html"><p>Saltar ventanas o meterte en taquillas apenas hace ruido ni avisa al asesino. Tiene tiempo de recarga.</p></field>
+        <field name="survivor_id" ref="survivor_meg"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_sigilo')])]"/>
+    </record>
+    <record id="perk_sprint_burst" model="dbd.perk">
+        <field name="name">Sprint Burst</field>
+        <field name="role">survivor</field>
+        <field name="sequence">5</field>
+        <field name="description" type="html"><p>Al empezar a correr, esprintas un 150 % de tu velocidad durante 3 segundos. Provoca agotamiento.</p></field>
+        <field name="survivor_id" ref="survivor_meg"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_agotamiento'), ref('tag_velocidad')])]"/>
+    </record>
+    <record id="perk_adrenaline" model="dbd.perk">
+        <field name="name">Adrenaline</field>
+        <field name="role">survivor</field>
+        <field name="sequence">6</field>
+        <field name="description" type="html"><p>Al abrirse las puertas de salida te curas un estado de salud y esprintas unos segundos.</p></field>
+        <field name="survivor_id" ref="survivor_meg"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_curacion'), ref('tag_velocidad')])]"/>
+    </record>
+    <record id="perk_empathy" model="dbd.perk">
+        <field name="name">Empathy</field>
+        <field name="role">survivor</field>
+        <field name="sequence">7</field>
+        <field name="description" type="html"><p>Ves el aura de los supervivientes heridos o moribundos a gran distancia.</p></field>
+        <field name="survivor_id" ref="survivor_claudette"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_aura'), ref('tag_curacion')])]"/>
+    </record>
+    <record id="perk_botany_knowledge" model="dbd.perk">
+        <field name="name">Botany Knowledge</field>
+        <field name="role">survivor</field>
+        <field name="sequence">8</field>
+        <field name="description" type="html"><p>Curas más rápido, aunque los botiquines se gastan algo más deprisa.</p></field>
+        <field name="survivor_id" ref="survivor_claudette"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_curacion')])]"/>
+    </record>
+    <record id="perk_self_care" model="dbd.perk">
+        <field name="name">Self-Care</field>
+        <field name="role">survivor</field>
+        <field name="sequence">9</field>
+        <field name="description" type="html"><p>Puedes curarte a ti mismo sin botiquín, aunque a menor velocidad.</p></field>
+        <field name="survivor_id" ref="survivor_claudette"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_curacion')])]"/>
+    </record>
+    <record id="perk_iron_will" model="dbd.perk">
+        <field name="name">Iron Will</field>
+        <field name="role">survivor</field>
+        <field name="sequence">10</field>
+        <field name="description" type="html"><p>Los gemidos de dolor apenas se oyen mientras estás herido.</p></field>
+        <field name="survivor_id" ref="survivor_jake"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_sigilo')])]"/>
+    </record>
+    <record id="perk_calm_spirit" model="dbd.perk">
+        <field name="name">Calm Spirit</field>
+        <field name="role">survivor</field>
+        <field name="sequence">11</field>
+        <field name="description" type="html"><p>Los cuervos se alarman mucho menos y puedes suprimir los gritos.</p></field>
+        <field name="survivor_id" ref="survivor_jake"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_sigilo')])]"/>
+    </record>
+    <record id="perk_saboteur" model="dbd.perk">
+        <field name="name">Saboteur</field>
+        <field name="role">survivor</field>
+        <field name="sequence">12</field>
+        <field name="description" type="html"><p>Puedes sabotear ganchos sin caja de herramientas y ves los ganchos cercanos cuando alguien carga a un superviviente.</p></field>
+        <field name="survivor_id" ref="survivor_jake"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_ganchos'), ref('tag_aura')])]"/>
+    </record>
+    <record id="perk_kindred" model="dbd.perk">
+        <field name="name">Kindred</field>
+        <field name="role">survivor</field>
+        <field name="sequence">13</field>
+        <field name="description" type="html"><p>Cuando alguien está colgado de un gancho, todos los supervivientes se ven entre sí (y al asesino si está cerca del gancho).</p></field>
+        <field name="tag_ids" eval="[Command.set([ref('tag_aura'), ref('tag_ganchos')])]"/>
+    </record>
+    <record id="perk_spine_chill" model="dbd.perk">
+        <field name="name">Spine Chill</field>
+        <field name="role">survivor</field>
+        <field name="sequence">14</field>
+        <field name="description" type="html"><p>Te avisa cuando el asesino te mira cerca y te da algo más de velocidad en reparaciones y curas.</p></field>
+        <field name="tag_ids" eval="[Command.set([ref('tag_informacion')])]"/>
+    </record>
+    <record id="perk_well_make_it" model="dbd.perk">
+        <field name="name">We'll Make It</field>
+        <field name="role">survivor</field>
+        <field name="sequence">15</field>
+        <field name="description" type="html"><p>Tras rescatar a alguien de un gancho, curas mucho más rápido a los demás durante un tiempo.</p></field>
+        <field name="tag_ids" eval="[Command.set([ref('tag_curacion')])]"/>
+    </record>
+    <record id="perk_resilience" model="dbd.perk">
+        <field name="name">Resilience</field>
+        <field name="role">survivor</field>
+        <field name="sequence">16</field>
+        <field name="description" type="html"><p>Mientras estás herido haces más rápido casi todas las acciones.</p></field>
+        <field name="tag_ids" eval="[Command.set([ref('tag_velocidad')])]"/>
+    </record>
+    <record id="perk_unnerving_presence" model="dbd.perk">
+        <field name="name">Unnerving Presence</field>
+        <field name="role">killer</field>
+        <field name="sequence">17</field>
+        <field name="description" type="html"><p>Los supervivientes dentro de tu radio de terror fallan más las pruebas de habilidad.</p></field>
+        <field name="killer_id" ref="killer_trapper"/>
+    </record>
+    <record id="perk_brutal_strength" model="dbd.perk">
+        <field name="name">Brutal Strength</field>
+        <field name="role">killer</field>
+        <field name="sequence">18</field>
+        <field name="description" type="html"><p>Rompes palés y paredes y dañas generadores más rápido.</p></field>
+        <field name="killer_id" ref="killer_trapper"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_persecucion')])]"/>
+    </record>
+    <record id="perk_agitation" model="dbd.perk">
+        <field name="name">Agitation</field>
+        <field name="role">killer</field>
+        <field name="sequence">19</field>
+        <field name="description" type="html"><p>Mientras cargas a un superviviente te mueves más rápido y tu radio de terror crece.</p></field>
+        <field name="killer_id" ref="killer_trapper"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_ganchos'), ref('tag_velocidad')])]"/>
+    </record>
+    <record id="perk_predator" model="dbd.perk">
+        <field name="name">Predator</field>
+        <field name="role">killer</field>
+        <field name="sequence">20</field>
+        <field name="description" type="html"><p>Las marcas de arañazos aparecen más juntas y, tras perder a alguien, ves su aura un momento.</p></field>
+        <field name="killer_id" ref="killer_wraith"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_persecucion'), ref('tag_informacion')])]"/>
+    </record>
+    <record id="perk_bloodhound" model="dbd.perk">
+        <field name="name">Bloodhound</field>
+        <field name="role">killer</field>
+        <field name="sequence">21</field>
+        <field name="description" type="html"><p>Los charcos de sangre brillan en rojo y se ven durante más tiempo.</p></field>
+        <field name="killer_id" ref="killer_wraith"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_persecucion')])]"/>
+    </record>
+    <record id="perk_shadowborn" model="dbd.perk">
+        <field name="name">Shadowborn</field>
+        <field name="role">killer</field>
+        <field name="sequence">22</field>
+        <field name="description" type="html"><p>Amplía tu campo de visión y eres inmune a la ceguera de las linternas.</p></field>
+        <field name="killer_id" ref="killer_wraith"/>
+    </record>
+    <record id="perk_enduring" model="dbd.perk">
+        <field name="name">Enduring</field>
+        <field name="role">killer</field>
+        <field name="sequence">23</field>
+        <field name="description" type="html"><p>Te recuperas antes de los aturdimientos por palé.</p></field>
+        <field name="killer_id" ref="killer_hillbilly"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_persecucion')])]"/>
+    </record>
+    <record id="perk_lightborn" model="dbd.perk">
+        <field name="name">Lightborn</field>
+        <field name="role">killer</field>
+        <field name="sequence">24</field>
+        <field name="description" type="html"><p>Eres inmune a la ceguera y ves el aura de quien intenta cegarte.</p></field>
+        <field name="killer_id" ref="killer_hillbilly"/>
+    </record>
+    <record id="perk_tinkerer" model="dbd.perk">
+        <field name="name">Tinkerer</field>
+        <field name="role">killer</field>
+        <field name="sequence">25</field>
+        <field name="description" type="html"><p>Cuando un generador está casi reparado recibes un aviso y quedas indetectable unos segundos.</p></field>
+        <field name="killer_id" ref="killer_hillbilly"/>
+        <field name="tag_ids" eval="[Command.set([ref('tag_reparacion'), ref('tag_sigilo')])]"/>
+    </record>
+    <record id="perk_noed" model="dbd.perk">
+        <field name="name">Hex: No One Escapes Death</field>
+        <field name="role">killer</field>
+        <field name="sequence">26</field>
+        <field name="description" type="html"><p>Al abrirse las puertas, si quedan tótems apagados, derribas de un golpe y te mueves más rápido hasta que destruyan el tótem.</p></field>
+        <field name="tag_ids" eval="[Command.set([ref('tag_maleficio')])]"/>
+    </record>
+    <record id="perk_whispers" model="dbd.perk">
+        <field name="name">Whispers</field>
+        <field name="role">killer</field>
+        <field name="sequence">27</field>
+        <field name="description" type="html"><p>Oyes susurros cuando hay algún superviviente cerca de ti.</p></field>
+        <field name="tag_ids" eval="[Command.set([ref('tag_informacion')])]"/>
+    </record>
+    <record id="perk_sloppy_butcher" model="dbd.perk">
+        <field name="name">Sloppy Butcher</field>
+        <field name="role">killer</field>
+        <field name="sequence">28</field>
+        <field name="description" type="html"><p>Los golpes básicos causan hemorragia y mutilación: los supervivientes sangran más y se curan más despacio.</p></field>
+    </record>
+    <record id="perk_bitter_murmur" model="dbd.perk">
+        <field name="name">Bitter Murmur</field>
+        <field name="role">killer</field>
+        <field name="sequence">29</field>
+        <field name="description" type="html"><p>Al completarse un generador ves el aura de los supervivientes cercanos; al completarse todos, la de todos.</p></field>
+        <field name="tag_ids" eval="[Command.set([ref('tag_aura'), ref('tag_informacion')])]"/>
+    </record>
+    <record id="realm_macmillan" model="dbd.realm">
+        <field name="name">The MacMillan Estate</field>
+        <field name="sequence">1</field>
+        <field name="description" type="html"><p>Las minas y el aserradero de la familia MacMillan, dominio de The Trapper.</p></field>
+    </record>
+    <record id="map_coal_tower" model="dbd.map">
+        <field name="name">Coal Tower</field>
+        <field name="realm_id" ref="realm_macmillan"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="map_groaning_storehouse" model="dbd.map">
+        <field name="name">Groaning Storehouse</field>
+        <field name="realm_id" ref="realm_macmillan"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="map_ironworks_of_misery" model="dbd.map">
+        <field name="name">Ironworks of Misery</field>
+        <field name="realm_id" ref="realm_macmillan"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="map_shelter_woods" model="dbd.map">
+        <field name="name">Shelter Woods</field>
+        <field name="realm_id" ref="realm_macmillan"/>
+        <field name="sequence">4</field>
+    </record>
+    <record id="map_suffocation_pit" model="dbd.map">
+        <field name="name">Suffocation Pit</field>
+        <field name="realm_id" ref="realm_macmillan"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="realm_autohaven" model="dbd.realm">
+        <field name="name">Autohaven Wreckers</field>
+        <field name="sequence">2</field>
+        <field name="description" type="html"><p>Un desguace de coches abandonado, envuelto en la niebla.</p></field>
+    </record>
+    <record id="map_azarov_s_resting_place" model="dbd.map">
+        <field name="name">Azarov's Resting Place</field>
+        <field name="realm_id" ref="realm_autohaven"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="map_blood_lodge" model="dbd.map">
+        <field name="name">Blood Lodge</field>
+        <field name="realm_id" ref="realm_autohaven"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="map_gas_heaven" model="dbd.map">
+        <field name="name">Gas Heaven</field>
+        <field name="realm_id" ref="realm_autohaven"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="map_wreckers__yard" model="dbd.map">
+        <field name="name">Wreckers' Yard</field>
+        <field name="realm_id" ref="realm_autohaven"/>
+        <field name="sequence">4</field>
+    </record>
+    <record id="map_wretched_shop" model="dbd.map">
+        <field name="name">Wretched Shop</field>
+        <field name="realm_id" ref="realm_autohaven"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="realm_coldwind" model="dbd.realm">
+        <field name="name">Coldwind Farm</field>
+        <field name="sequence">3</field>
+        <field name="description" type="html"><p>La granja de maíz de la familia Thompson, hogar de The Hillbilly.</p></field>
+    </record>
+    <record id="map_fractured_cowshed" model="dbd.map">
+        <field name="name">Fractured Cowshed</field>
+        <field name="realm_id" ref="realm_coldwind"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="map_rancid_abattoir" model="dbd.map">
+        <field name="name">Rancid Abattoir</field>
+        <field name="realm_id" ref="realm_coldwind"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="map_rotten_fields" model="dbd.map">
+        <field name="name">Rotten Fields</field>
+        <field name="realm_id" ref="realm_coldwind"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="map_the_thompson_house" model="dbd.map">
+        <field name="name">The Thompson House</field>
+        <field name="realm_id" ref="realm_coldwind"/>
+        <field name="sequence">4</field>
+    </record>
+    <record id="map_torment_creek" model="dbd.map">
+        <field name="name">Torment Creek</field>
+        <field name="realm_id" ref="realm_coldwind"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="addon_iridescent_stone" model="dbd.addon">
+        <field name="name">Iridescent Stone</field>
+        <field name="killer_id" ref="killer_trapper"/>
+        <field name="rarity">ultra_rare</field>
+        <field name="description" type="html"><p>Cada cierto tiempo se arma sola una trampa desarmada al azar.</p></field>
+    </record>
+    <record id="addon_honing_stone" model="dbd.addon">
+        <field name="name">Honing Stone</field>
+        <field name="killer_id" ref="killer_trapper"/>
+        <field name="rarity">very_rare</field>
+        <field name="description" type="html"><p>Quien cae en una trampa queda directamente en el suelo.</p></field>
+    </record>
+    <record id="addon_all_seeing_blood" model="dbd.addon">
+        <field name="name">"All Seeing" - Blood</field>
+        <field name="killer_id" ref="killer_wraith"/>
+        <field name="rarity">ultra_rare</field>
+        <field name="description" type="html"><p>Mientras eres invisible ves el aura de los supervivientes lejanos.</p></field>
+    </record>
+    <record id="addon_brand_new_part" model="dbd.addon">
+        <field name="name">Brand New Part</field>
+        <field name="item_type">toolbox</field>
+        <field name="rarity">ultra_rare</field>
+        <field name="description" type="html"><p>Una prueba de habilidad especial al reparar con la caja avanza mucho el generador. Se gasta al usarla.</p></field>
+    </record>
+    <record id="offering_escape_cake" model="dbd.offering">
+        <field name="name">Escape! Cake</field>
+        <field name="role">both</field>
+        <field name="category">bloodpoints</field>
+        <field name="rarity">ultra_rare</field>
+        <field name="description" type="html"><p>Más puntos de sangre en todas las categorías para todos los jugadores.</p></field>
+    </record>
+    <record id="offering_azarovs_key" model="dbd.offering">
+        <field name="name">Azarov's Key</field>
+        <field name="role">both</field>
+        <field name="category">realm</field>
+        <field name="rarity">rare</field>
+        <field name="description" type="html"><p>La partida se juega en un mapa de Autohaven Wreckers.</p></field>
+        <field name="realm_id" ref="realm_autohaven"/>
+    </record>
+    <record id="offering_macmillans_bone" model="dbd.offering">
+        <field name="name">MacMillan's Phalanx Bone</field>
+        <field name="role">both</field>
+        <field name="category">realm</field>
+        <field name="rarity">rare</field>
+        <field name="description" type="html"><p>La partida se juega en un mapa de The MacMillan Estate.</p></field>
+        <field name="realm_id" ref="realm_macmillan"/>
+    </record>
+    <record id="offering_ebony_mori" model="dbd.offering">
+        <field name="name">Ebony Memento Mori</field>
+        <field name="role">killer</field>
+        <field name="category">mori</field>
+        <field name="rarity">ultra_rare</field>
+        <field name="description" type="html"><p>Puedes matar con tus propias manos a todos los supervivientes.</p></field>
+    </record>
+</odoo>

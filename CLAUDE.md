@@ -16,6 +16,7 @@ odoo.conf              configuración de Odoo sin secretos (montada como /etc/od
 postgres/init/         script de la primera vez: roles `odoo` (CREATEDB) y `rutinas`, bases `fuertafit` y `rutinas`
 addons/                extra-addons: cada carpeta es un módulo (nombre técnico = nombre de la carpeta)
   fuertafit/           módulo `fuertafit` (Mi rutina Fuerta, web en el sitio web de Odoo) + scripts/, CLAUDE.md, skills
+  dbd/                 módulo `dbd` (enciclopedia de Dead by Daylight, web /dbd), separado de fuertafit
   menu_inicio/         módulo `menu_inicio`: pantalla de inicio con cuadrícula de apps (estilo Enterprise, código propio)
   myspoty/             futuro módulo `myspoty` (aún sin manifest; app antigua en app/), CLAUDE.md y skills
 ```
@@ -34,6 +35,8 @@ addons/                extra-addons: cada carpeta es un módulo (nombre técnico
   Compose avisa de que los volúmenes "were created for project postgres/fuertafit": es normal, se crearon antes de
   unificar (2026-10-05). **No** pongas `external: true` ni los borres.
 - Odoo en `http://IP-de-este-PC:8000` (toda la red local, decisión del usuario). Postgres solo en `127.0.0.1:5432`.
+- Si se recrea la carpeta `addons/` (reestructurar, clonar de nuevo…), el contenedor sigue viendo la antigua
+  (`/mnt/extra-addons` vacío): `restart odoo`.
 - Cambiar código Python o XML de un módulo: `restart` + actualizar el módulo en su base de datos (no hace falta `--build`).
   `--build` si cambian `Dockerfile` u `odoo-entrypoint.sh` (van dentro de la imagen). Cambiar `.env`: `up -d --force-recreate`.
 
@@ -43,15 +46,25 @@ addons/                extra-addons: cada carpeta es un módulo (nombre técnico
   contraseña maestra (`ODOO_MASTER_PASSWORD` en `.env`; **no la muestres**). Odoo solo lista las bases cuyo dueño es `odoo`.
 - Por consola: `odoo db {init,duplicate,dump,load,rename,drop}` y `odoo module {install,upgrade,uninstall,list}`
   dentro del contenedor (`docker compose exec -T odoo odoo ...`). Gestionan también el filestore.
-- Bases actuales: `fuertafit` (Odoo, **datos reales** del usuario) y `rutinas` (web antigua de fuertafit, solo para
-  migrar). La de la app antigua de myspoty ya no importa al usuario (2026-10-05).
+- Bases actuales (2026-10-05): `claude-main` (la principal, con fuertafit y menu_inicio: **datos reales**),
+  `claude-test` (pruebas del usuario: fuertafit, menu_inicio y dbd con el catálogo completo) y `rutinas` (web
+  antigua de fuertafit, solo para migrar). La base `fuertafit` ya no existe. La de la app antigua de myspoty ya no
+  importa al usuario.
 - En Odoo 20 el servicio `db` de `/jsonrpc` ya no existe: usa el gestor web o el CLI.
 
 ## Odoo 20: convenciones de los módulos (ver `addons/fuertafit` como ejemplo)
 
 - Manifest: `version` `20.0.x.y.z`, `author` `danii1199`, `license` `LGPL-3`, `depends` mínimo.
 - Permisos en `security/ir.access.csv` (modelo `ir.access`, nuevo en 20): columnas
-  `id,name,model_id,group_id/id,operation,domain`; `operation` tipo `r`/`crud`; el dominio sustituye a las `ir.rule`.
+  `id,name,model_id,group_id/id,operation,domain`; `model_id` es el nombre del modelo (`fuerta.routine`, no
+  `model_fuerta_routine`); `operation` tipo `r`/`crud`; el dominio sustituye a las `ir.rule`.
+- QWeb: un `t-call` solo pasa los valores del render y sus atributos (`<t t-call="x" rec="c"/>`); un `t-set` dentro
+  del cuerpo del `t-call` **no** llega a la plantilla llamada (tampoco `additional_title` a `website.layout`).
+- **Acceso por módulo**: cada módulo tiene su grupo en `security/groups.xml` (`ir.module.category` +
+  `res.groups.privilege` + `res.groups` que implica `base.group_user`, con `user_ids` = `base.user_admin`, que es Dani).
+  `ir.access.csv`, el menú raíz (`groups=`), las rutas web privadas (`has_group`) y el menú del sitio web usan ese
+  grupo; así un usuario nuevo no ve nada hasta que se le da acceso en Ajustes → Usuarios. Odoo copia cada
+  `website.menu` por sitio web: para cambiarle los grupos, escribe en todas las copias (busca por `manual_url`).
 - Restricciones SQL con `models.Constraint("UNIQUE (...)", "mensaje")` (no `_sql_constraints`).
 - Campos Binary: el valor es un `BinaryValue` (`.decode()`, `.content`), no base64; al escribir, str base64 o BinaryValue.
 - Botones de cabecera en listas: `<header><button ... display="always"/></header>`. URLs de backend: `/odoo/action-<xmlid>`.
@@ -66,7 +79,7 @@ addons/                extra-addons: cada carpeta es un módulo (nombre técnico
 
 ## Normas
 
-- **No tocar datos reales** (base `fuertafit`) sin pedirlo: prueba en una copia (skill `probar-modulo`).
+- **No tocar datos reales** (base `claude-main`) sin pedirlo: prueba en una copia (skill `probar-modulo`).
   Nunca borres, restaures ni sobrescribas una base de datos o volumen sin confirmación explícita.
 - No leer ni mostrar `.env`, contraseñas ni tokens. Para usar un valor: `grep '^X=' .env | cut -d= -f2-` dentro de un comando.
 - Nada de funciones que obliguen a pagar APIs (el usuario no quiere); preferir reglas deterministas.

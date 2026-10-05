@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================= Complementos ================= -->
+    <record id="addon_view_list" model="ir.ui.view">
+        <field name="name">dbd.addon.list</field>
+        <field name="model">dbd.addon</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="rarity == 'common'" decoration-success="rarity == 'rare'"
+                  decoration-info="rarity == 'very_rare'" decoration-danger="rarity == 'ultra_rare'"
+                  decoration-warning="rarity in ('uncommon', 'event')">
+                <field name="image" widget="image" options="{'size': [32, 32]}"/>
+                <field name="name"/>
+                <field name="role"/>
+                <field name="killer_id"/>
+                <field name="item_type"/>
+                <field name="rarity"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="addon_view_form" model="ir.ui.view">
+        <field name="name">dbd.addon.form</field>
+        <field name="model">dbd.addon</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title"><h1><field name="name" placeholder="Nombre del complemento"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="role"/>
+                            <field name="killer_id" invisible="role != 'killer'" required="role == 'killer'"/>
+                            <field name="item_type" invisible="role != 'survivor'" required="role == 'survivor'"/>
+                        </group>
+                        <group>
+                            <field name="rarity"/>
+                            <field name="dbd_key" groups="base.group_no_one"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Efecto del complemento"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="addon_view_search" model="ir.ui.view">
+        <field name="name">dbd.addon.search</field>
+        <field name="model">dbd.addon</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="killer_id"/>
+                <filter name="killer" string="De asesino" domain="[('role', '=', 'killer')]"/>
+                <filter name="survivor" string="De objeto" domain="[('role', '=', 'survivor')]"/>
+                <separator/>
+                <filter name="archived" string="Archivados" domain="[('active', '=', False)]"/>
+                <filter name="by_killer" string="Asesino" context="{'group_by': 'killer_id'}"/>
+                <filter name="by_item" string="Objeto" context="{'group_by': 'item_type'}"/>
+                <filter name="by_rarity" string="Rareza" context="{'group_by': 'rarity'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_addons" model="ir.actions.act_window">
+        <field name="name">Complementos</field>
+        <field name="res_model">dbd.addon</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ================= Ofrendas ================= -->
+    <record id="offering_view_list" model="ir.ui.view">
+        <field name="name">dbd.offering.list</field>
+        <field name="model">dbd.offering</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="rarity == 'common'" decoration-success="rarity == 'rare'"
+                  decoration-info="rarity == 'very_rare'" decoration-danger="rarity == 'ultra_rare'"
+                  decoration-warning="rarity in ('uncommon', 'event')">
+                <field name="image" widget="image" options="{'size': [32, 32]}"/>
+                <field name="name"/>
+                <field name="role"/>
+                <field name="category"/>
+                <field name="realm_id" optional="show"/>
+                <field name="rarity"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="offering_view_form" model="ir.ui.view">
+        <field name="name">dbd.offering.form</field>
+        <field name="model">dbd.offering</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title"><h1><field name="name" placeholder="Nombre de la ofrenda"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="role"/>
+                            <field name="category"/>
+                            <field name="realm_id" invisible="category != 'realm'"/>
+                        </group>
+                        <group>
+                            <field name="rarity"/>
+                            <field name="dbd_key" groups="base.group_no_one"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Efecto de la ofrenda"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="offering_view_search" model="ir.ui.view">
+        <field name="name">dbd.offering.search</field>
+        <field name="model">dbd.offering</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="description"/>
+                <filter name="survivor" string="De superviviente" domain="[('role', 'in', ('survivor', 'both'))]"/>
+                <filter name="killer" string="De asesino" domain="[('role', 'in', ('killer', 'both'))]"/>
+                <separator/>
+                <filter name="archived" string="Archivados" domain="[('active', '=', False)]"/>
+                <filter name="by_category" string="Tipo" context="{'group_by': 'category'}"/>
+                <filter name="by_rarity" string="Rareza" context="{'group_by': 'rarity'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_offerings" model="ir.actions.act_window">
+        <field name="name">Ofrendas</field>
+        <field name="res_model">dbd.offering</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

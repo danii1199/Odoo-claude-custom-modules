@@ -6,6 +6,7 @@ Odoo 20 Community con mis módulos propios. Postgres y Odoo comunes en Docker; c
 | Proyecto | Módulo | Estado |
 |---|---|---|
 | [`addons/fuertafit`](addons/fuertafit) | `fuertafit` · Mi rutina Fuerta (web en el sitio web de Odoo, `/fuerta`) | ver su README |
+| [`addons/dbd`](addons/dbd) | `dbd` · enciclopedia de Dead by Daylight (web `/dbd`, catálogo importado de fuentes públicas) | ver su README |
 | [`addons/menu_inicio`](addons/menu_inicio) | `menu_inicio` · pantalla de inicio con iconos de apps (estilo Enterprise) | instálalo en cada base |
 | [`addons/myspoty`](addons/myspoty) | `myspoty` · reproductor de Spotify | pendiente de portar a Odoo |
 
