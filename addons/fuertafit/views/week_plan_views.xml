@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mis semanas: las mismas semanas tipo guardadas que en la pestaña «Plan semanal» de la web. -->
+<odoo>
+    <record id="week_plan_view_list" model="ir.ui.view">
+        <field name="name">fuerta.week.plan.list</field>
+        <field name="model">fuerta.week.plan</field>
+        <field name="arch" type="xml">
+            <list decoration-info="recommended">
+                <field name="sequence" widget="handle"/>
+                <field name="days_count" optional="hide"/>
+                <field name="minutes" optional="hide"/>
+                <field name="name"/>
+                <field name="recommended" widget="boolean_toggle" readonly="1"/>
+                <field name="summary"/>
+                <button name="action_use" type="object" string="Usar esta semana" icon="fa-check"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="week_plan_view_form" model="ir.ui.view">
+        <field name="name">fuerta.week.plan.form</field>
+        <field name="model">fuerta.week.plan</field>
+        <field name="arch" type="xml">
+            <form string="Semana tipo">
+                <header>
+                    <button name="action_use" type="object" string="Usar esta semana" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info" role="status" invisible="not recommended">
+                        ★ Semana recomendada (común, de solo lectura). Para cambiarla, duplícala desde el menú ⚙.
+                    </div>
+                    <div class="oe_title"><h1><field name="name" readonly="recommended" placeholder="p. ej. 3 días · fullbody L/M/X"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="minutes" readonly="recommended"/>
+                            <field name="days_count" help="Se calcula solo: es el «mundo» donde aparece (3 días, 4 días…)."/>
+                        </group>
+                        <group>
+                            <field name="recommended"/>
+                        </group>
+                    </group>
+                    <field name="description" readonly="recommended" invisible="not recommended and not description" placeholder="Notas"/>
+                    <group string="Grupos de cada día (sin grupos = descanso; el primero es el principal)">
+                        <group>
+                            <field name="day_0" readonly="recommended" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="day_1" readonly="recommended" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="day_2" readonly="recommended" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="day_3" readonly="recommended" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="day_4" readonly="recommended" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="day_5" readonly="recommended" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="day_6" readonly="recommended" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_week_plans" model="ir.actions.act_window">
+        <field name="name">Mis semanas</field>
+        <field name="res_model">fuerta.week.plan</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'group_by': ['days_count', 'minutes']}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Guarda aquí tus semanas tipo</p>
+            <p>Crea una (p. ej. «3 días · fullbody L/M/X») y pulsa «Usar esta semana» para generar el calendario con ella.</p>
+        </field>
+    </record>
+</odoo>

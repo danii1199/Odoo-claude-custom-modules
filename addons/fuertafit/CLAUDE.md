@@ -15,7 +15,8 @@ sigue existiendo solo para `scripts/migrar_rutinas.py`.
 __manifest__.py  depende de base, web y website
 models/          routine.py (fuerta.routine: catálogo COMÚN, `data` JSON + campos calculados almacenados),
                  history.py, plan.py (+ acciones del backend: hecha, generar semana), day_status.py (skipped/moved/away),
-                 settings.py (fuerta.settings: JSON `values` + campos editables con compute/inverse; fuerta.group)
+                 settings.py (fuerta.settings: JSON `values` + campos editables con compute/inverse; fuerta.group),
+                 week_plan.py (fuerta.week.plan: «Mis semanas», semanas tipo guardadas por usuario)
 wizard/          away.py (marcar ausencia de varios días), routine_import.py (importar JSON de rutinas)
 services/        lógica sin HTTP que recibe `env`: catalog.py (grupos con GROUP_RULES, búsqueda, caché por base),
                  generator.py, planner.py (semana/día), calendar.py (mover, saltar, ausencias), coach.py (IA, latente),
@@ -47,7 +48,7 @@ scripts/         migrar_rutinas.py (rutinas → Odoo; solo lee la base antigua; 
 Menú **Mi rutina Fuerta**: Planificado (calendario/lista editable, botones «Generar esta semana / la que viene»,
 «Hecha»/«Deshacer» por línea), Historial, Días especiales (+ «Marcar ausencia» con rango), Mis ajustes (server action
 que abre/crea el registro del usuario: minutos, calentamiento, material, semana tipo con etiquetas, plan automático),
-Catálogo → Rutinas (lectura) e Importar rutinas (mismo JSON que el marcador). Lo que se cree en un lado se ve en el otro:
+Mis semanas (semanas tipo guardadas, agrupadas por días de entreno, botón «Usar esta semana»), Catálogo → Rutinas (lectura) e Importar rutinas (mismo JSON que el marcador). Lo que se cree en un lado se ve en el otro:
 los dos usan los mismos modelos y métodos (`save_plan`, `mark_done`, `planner.plan_week`, `calendar.set_away`…).
 Si añades algo a la web, añade su equivalente en el backend (y al revés).
 
@@ -67,6 +68,12 @@ Si añades algo a la web, añade su equivalente en el backend (y al revés).
   escriben con `_inverse_fields`. `auto_plan` tiene compute propio porque se guarda (el cron busca por él).
   Los nombres de `fuerta.group` deben coincidir con `GROUP_RULES` de `services/catalog.py`.
 - Odoo 20: un campo Binary devuelve `BinaryValue` (`.decode()` da el contenido ya sin base64).
+- Mis semanas (`fuerta.week.plan`, 2026-10-05): semanas tipo por días de entreno (`days_count`, calculado) y
+  minutos (`minutes`). Las **recomendadas** (`recommended`, sin `user_id`, comunes y de solo lectura por ir.access)
+  vienen de `data/week_recommended.xml` (3/4/5 días × 30/45/50/60 min, pautas ACSM/NSCA; generado con un script,
+  descripción en cada una). Las del usuario son suyas; duplicar una recomendada da una propia. Usar una = copiar su
+  `week` y sus `minutes` a los ajustes (`week` y `dailyMinutes`). Ya no se crean semanas de ejemplo por usuario.
+- `semana.js`: `save()` sustituye `s`; los chips leen siempre `s.week[i]` al hacer clic (antes editaban el objeto viejo).
 - `services/coach.py`: entrenador con Claude API, **latente** (solo con `ANTHROPIC_API_KEY` y el SDK). El usuario no
   quiere pagar API: no lo actives ni lo sugieras.
 

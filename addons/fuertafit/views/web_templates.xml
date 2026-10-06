@@ -106,7 +106,12 @@
                   <!-- ================= PLAN SEMANAL ================= -->
                   <div class="view" id="view-semana" hidden="">
                     <section>
-                      <h2>Plantillas</h2>
+                      <h2>Mis semanas</h2>
+                      <p class="muted" style="margin-top:-6px">Elige cuántos días entrenas y cuánto tiempo tienes: tu semana tipo
+                        se rellena sola con la <strong>★ recomendada</strong> (pautas ACSM/NSCA) y sus minutos. Luego puedes
+                        retocarla abajo y guardarla como tuya; tus semanas guardadas aparecen junto a la recomendada.</p>
+                      <div class="fa-row" id="wkWorlds"/>
+                      <div class="fa-row" id="wkTimes"/>
                       <div class="templates" id="templates"/>
                     </section>
                     <section>
@@ -115,6 +120,11 @@
                         Si marcas dos grupos, el tiempo se reparte entre ellos. Para cambiar un día concreto (moverlo, saltarlo o
                         vacaciones) usa el <a href="#/calendario">calendario</a>.</p>
                       <div class="weekgrid" id="weekGrid"/>
+                      <div class="actions wk-save">
+                        <input type="text" id="wkName" placeholder="Nombre (p. ej. 3 días · fullbody L/M/X)"/>
+                        <button class="ghost" id="wkUpdate" hidden="">Guardar cambios en esta semana</button>
+                        <button class="ghost" id="wkNew">Guardar como semana nueva</button>
+                      </div>
                     </section>
                     <section>
                       <h2>Cada sesión</h2>
