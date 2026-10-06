@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_open_web" model="ir.actions.act_url">
+        <field name="name">Dead by Daylight (web)</field>
+        <field name="url">/dbd</field>
+        <field name="target">self</field>
+    </record>
+
+    <menuitem id="menu_root" name="Dead by Daylight" action="action_survivors" groups="group_dbd_user" web_icon="dbd,static/description/icon.png" sequence="5"/>
+    <menuitem id="menu_web" name="Abrir la web" parent="menu_root" action="action_open_web" sequence="1"/>
+    <menuitem id="menu_characters" name="Personajes" parent="menu_root" sequence="10"/>
+    <menuitem id="menu_survivors" name="Supervivientes" parent="menu_characters" action="action_survivors" sequence="1"/>
+    <menuitem id="menu_killers" name="Asesinos" parent="menu_characters" action="action_killers" sequence="2"/>
+    <menuitem id="menu_perks" name="Perks" parent="menu_root" action="action_perks" sequence="20"/>
+    <menuitem id="menu_builds" name="Builds" parent="menu_root" sequence="5"/>
+    <menuitem id="menu_build_mine" name="Mis builds" parent="menu_builds" action="action_builds" sequence="1"/>
+    <menuitem id="menu_build_new" name="Crear build" parent="menu_builds" action="action_web_build" sequence="2"/>
+    <menuitem id="menu_build_random" name="Build aleatoria" parent="menu_builds" action="action_web_random" sequence="3"/>
+    <menuitem id="menu_build_public" name="Builds publicadas" parent="menu_builds" action="action_web_builds" sequence="4"/>
+    <menuitem id="menu_items" name="Objetos" parent="menu_root" sequence="30"/>
+    <menuitem id="menu_survivor_items" name="Objetos de superviviente" parent="menu_items" action="action_items" sequence="0"/>
+    <menuitem id="menu_addons" name="Complementos" parent="menu_items" action="action_addons" sequence="1"/>
+    <menuitem id="menu_offerings" name="Ofrendas" parent="menu_items" action="action_offerings" sequence="2"/>
+    <menuitem id="menu_world" name="Mapas" parent="menu_root" sequence="40"/>
+    <menuitem id="menu_realms" name="Reinos" parent="menu_world" action="action_realms" sequence="1"/>
+    <menuitem id="menu_maps" name="Mapas" parent="menu_world" action="action_maps" sequence="2"/>
+    <menuitem id="menu_config" name="Configuración" parent="menu_root" sequence="90" groups="group_dbd_manager"/>
+    <menuitem id="menu_import" name="Actualizar catálogo" parent="menu_config" action="action_import_wizard" sequence="1"/>
+    <menuitem id="menu_perk_tags" name="Etiquetas de perks" parent="menu_config" action="action_perk_tags" sequence="2"/>
+</odoo>

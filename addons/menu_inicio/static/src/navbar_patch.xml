@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_navbar_apps_menu')]" position="replace">
+            <div t-if="!this.isScopedApp" class="o_navbar_apps_menu">
+                <button class="dropdown-toggle o_menu_inicio_toggle" t-att-class="{ active: this.homeMenuIsOpen }" data-hotkey="h"
+                        title="Menú de inicio" data-available-offline="" t-on-click="this.onHomeMenuToggle">
+                    <i class="oi" data-icon="apps"/>
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.NavBar" t-inherit-mode="extension">
+        <!-- Con el menú de inicio abierto no se muestran el nombre ni las secciones de la app -->
+        <xpath expr="//DropdownItem[contains(@class, 'o_menu_brand')]" position="attributes">
+            <attribute name="t-if">!this.ui.isSmall and this.currentApp and !this.homeMenuIsOpen</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web.NavBar.SectionsMenu']" position="attributes">
+            <attribute name="t-if">this.currentAppSections.length and !this.homeMenuIsOpen</attribute>
+        </xpath>
+    </t>
+
+</templates>

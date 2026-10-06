@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ojo, Odoo 20: un t-call solo pasa los valores del render y sus atributos (<t t-call="x" rec="c"/>);
+     un t-set dentro del cuerpo del t-call NO llega a la plantilla llamada.
+     Portal web de Dead by Daylight (/dbd), dentro del sitio web de Odoo: cabecera, menú y pie del sitio, una zona
+     editable con el editor del sitio web (oe_structure_dbd_top, no cambiar su id) y el contenido con estilo del juego.
+     CSS en static/src/css/dbd.css (todo bajo .dbd-app y #wrapwrap.dbd-page); filtros en static/src/js/dbd.js. -->
+<odoo>
+    <!-- ================= Marco común ================= -->
+    <template id="layout" name="DbD: marco">
+        <t t-call="website.layout" pageName="'dbd-page'" additional_title="page_title or 'Dead by Daylight'">
+            <div id="wrap" class="dbd-wrap">
+                <div class="oe_structure" id="oe_structure_dbd_top"/>
+                <div class="dbd-app">
+                    <nav class="dbd-nav">
+                        <a class="dbd-logo" href="/dbd">Dead <span>by</span> Daylight</a>
+                        <div class="dbd-tabs">
+                            <a href="/dbd/supervivientes" t-att-class="'active' if section == 'survivors' else None">Supervivientes</a>
+                            <a href="/dbd/asesinos" t-att-class="'active' if section == 'killers' else None">Asesinos</a>
+                            <a href="/dbd/perks" t-att-class="'active' if section == 'perks' else None">Perks</a>
+                            <a href="/dbd/complementos" t-att-class="'active' if section == 'addons' else None">Complementos</a>
+                            <a href="/dbd/ofrendas" t-att-class="'active' if section == 'offerings' else None">Ofrendas</a>
+                            <a href="/dbd/mapas" t-att-class="'active' if section == 'maps' else None">Mapas</a>
+                            <a href="/dbd/builds" t-attf-class="dbd-tab-build #{'active' if section == 'builds' else ''}">Builds</a>
+                            <a href="/dbd/build" t-attf-class="dbd-tab-build #{'active' if section == 'build' else ''}">Crear build</a>
+                            <a href="/dbd/aleatoria" t-attf-class="dbd-tab-build #{'active' if section == 'random' else ''}">Build aleatoria</a>
+                        </div>
+                        <a t-if="request.env.user.has_group('dbd.group_dbd_manager')" class="dbd-manage"
+                           href="/odoo/action-dbd.action_survivors" title="Editar el catálogo en el backend de Odoo">⚙ Gestionar</a>
+                    </nav>
+                    <main class="dbd-main">
+                        <t t-out="0"/>
+                    </main>
+                </div>
+            </div>
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&amp;family=Roboto+Condensed:wght@400;700&amp;display=swap"/>
+            <link rel="stylesheet" t-attf-href="/dbd/static/src/css/dbd.css?v={{v}}"/>
+            <script t-attf-src="/dbd/static/src/js/dbd.js?v={{v}}"/>
+            <t t-if="section in ('build', 'random', 'builds')">
+                <script t-attf-src="/dbd/static/src/js/loadout.js?v={{v}}"/>
+                <script t-if="section == 'build'" t-attf-src="/dbd/static/src/js/build.js?v={{v}}"/>
+                <script t-if="section == 'random'" t-attf-src="/dbd/static/src/js/random.js?v={{v}}"/>
+                <script t-if="section == 'builds'" t-attf-src="/dbd/static/src/js/builds.js?v={{v}}"/>
+            </t>
+        </t>
+    </template>
+
+    <!-- Imagen de un registro o, si no tiene, su inicial (para que la tarjeta no quede vacía). -->
+    <template id="picture" name="DbD: imagen">
+        <img t-if="rec.image" t-att-src="'/web/image/%s/%s/image' % (rec._name, rec.id)" t-att-alt="rec.name" loading="lazy"/>
+        <span t-else="" class="dbd-initial" t-out="(rec.name or '?')[:1]"/>
+    </template>
+
+    <!-- ================= Portada ================= -->
+    <template id="home_page" name="DbD: portada">
+        <t t-call="dbd.layout">
+            <section class="dbd-hero">
+                <h1>Dead <span>by</span> Daylight</h1>
+                <p>Cuatro supervivientes. Un asesino. Ninguna salida fácil.</p>
+            </section>
+            <section class="dbd-tiles">
+                <a class="dbd-tile" href="/dbd/supervivientes"><strong t-out="counts['survivors']"/><span>Supervivientes</span></a>
+                <a class="dbd-tile dbd-tile-red" href="/dbd/asesinos"><strong t-out="counts['killers']"/><span>Asesinos</span></a>
+                <a class="dbd-tile" href="/dbd/perks"><strong t-out="counts['perks']"/><span>Perks</span></a>
+                <a class="dbd-tile" href="/dbd/complementos"><strong t-out="counts['addons']"/><span>Complementos</span></a>
+                <a class="dbd-tile" href="/dbd/ofrendas"><strong t-out="counts['offerings']"/><span>Ofrendas</span></a>
+                <a class="dbd-tile" href="/dbd/mapas"><strong t-out="counts['maps']"/><span>Mapas</span></a>
+            </section>
+        </t>
+    </template>
+
+    <!-- ================= Personajes ================= -->
+    <template id="characters_page" name="DbD: personajes">
+        <t t-call="dbd.layout" page_title="title">
+            <div class="dbd-filterable">
+                <header class="dbd-title">
+                    <h1 t-out="title"/>
+                    <input type="search" class="dbd-search" placeholder="Buscar…"/>
+                    <span class="dbd-count"/>
+                </header>
+                <div class="dbd-grid dbd-grid-characters">
+                    <a t-foreach="characters" t-as="c" class="dbd-character dbd-item"
+                       t-attf-href="#{base_url}/#{slug(c)}"
+                       t-att-data-search="' '.join(filter(None, [c.name, c._name == 'dbd.killer' and c.real_name or '', c.chapter or ''])).lower()">
+                        <div class="dbd-portrait"><t t-call="dbd.picture" rec="c"/></div>
+                        <div class="dbd-character-name">
+                            <strong t-out="c.name"/>
+                            <small t-if="c._name == 'dbd.killer' and c.real_name" t-out="c.real_name"/>
+                            <small t-elif="c.chapter" t-out="c.chapter"/>
+                        </div>
+                    </a>
+                </div>
+                <p class="dbd-empty" hidden="">Nada coincide con la búsqueda.</p>
+                <p t-if="not characters" class="dbd-muted">Aún no hay nadie. Añádelos desde el backend.</p>
+            </div>
+        </t>
+    </template>
+
+    <template id="character_page" name="DbD: ficha de personaje">
+        <t t-call="dbd.layout" page_title="character.name">
+            <a class="dbd-back" t-att-href="back_url">‹ <t t-out="back_title"/></a>
+            <article t-attf-class="dbd-sheet #{'dbd-sheet-killer' if killer else ''}">
+                <div class="dbd-sheet-portrait"><t t-call="dbd.picture" rec="character"/></div>
+                <div class="dbd-sheet-body">
+                    <h1 t-out="character.name"/>
+                    <p t-if="killer and character.real_name" class="dbd-subtitle" t-out="character.real_name"/>
+                    <ul class="dbd-facts">
+                        <t t-if="killer">
+                            <li t-if="character.power_name"><span>Poder</span><strong t-out="character.power_name"/></li>
+                            <li><span>Velocidad</span><strong><t t-out="('%g' % character.speed).replace('.', ',')"/> m/s</strong></li>
+                            <li><span>Radio de terror</span><strong><t t-out="character.terror_radius"/> m</strong></li>
+                            <li t-if="character.height"><span>Altura</span><strong t-field="character.height"/></li>
+                        </t>
+                        <li t-if="character.difficulty"><span>Dificultad</span><strong t-field="character.difficulty"/></li>
+                        <li><span>Capítulo</span><strong t-out="character.chapter or 'Juego base'"/></li>
+                        <li t-if="character.release_date"><span>Salida</span><strong t-out="character.release_date.strftime('%d/%m/%Y')"/></li>
+                    </ul>
+                    <div t-if="character.bio" class="dbd-bio" t-out="character.bio"/>
+                    <div t-if="killer and character.power_description" class="dbd-power">
+                        <h2><img t-if="character.power_image" t-att-src="'/web/image/dbd.killer/%s/power_image' % character.id" alt=""/>
+                            Poder: <t t-out="character.power_name"/></h2>
+                        <div t-out="character.power_description"/>
+                    </div>
+                    <div t-if="character.description" class="dbd-lore" t-out="character.description"/>
+                </div>
+            </article>
+
+            <section class="dbd-section">
+                <h2>Perks propios</h2>
+                <div class="dbd-grid dbd-grid-perks">
+                    <t t-foreach="character.perk_ids" t-as="perk"><t t-call="dbd.perk_card" perk="perk"/></t>
+                </div>
+                <p t-if="not character.perk_ids" class="dbd-muted">Sin perks registrados.</p>
+            </section>
+
+            <section t-if="killer" class="dbd-section">
+                <h2>Complementos</h2>
+                <div class="dbd-grid dbd-grid-items">
+                    <t t-foreach="character.addon_ids.sorted(lambda a: (-a.rarity_order, a.name))" t-as="item"><t t-call="dbd.item_card" item="item"/></t>
+                </div>
+                <p t-if="not character.addon_ids" class="dbd-muted">Sin complementos registrados.</p>
+            </section>
+        </t>
+    </template>
+
+    <!-- ================= Perks ================= -->
+    <template id="perk_card" name="DbD: tarjeta de perk">
+        <div class="dbd-perk dbd-item" t-att-data-role="perk.role"
+             t-att-data-tags="' '.join(str(t.id) for t in perk.tag_ids)"
+             t-att-data-search="('%s %s' % (perk.name, perk.owner_name)).lower()">
+            <div class="dbd-perk-icon"><div><t t-call="dbd.picture" rec="perk"/></div></div>
+            <div class="dbd-perk-body">
+                <h3 t-out="perk.name"/>
+                <p class="dbd-owner">
+                    <t t-if="perk.survivor_id"><a t-attf-href="/dbd/supervivientes/#{slug(perk.survivor_id)}" t-out="perk.survivor_id.name"/></t>
+                    <t t-elif="perk.killer_id"><a t-attf-href="/dbd/asesinos/#{slug(perk.killer_id)}" t-out="perk.killer_id.name"/></t>
+                    <t t-else="">Perk general de <t t-out="'superviviente' if perk.role == 'survivor' else 'asesino'"/></t>
+                </p>
+                <div class="dbd-desc" t-out="perk.description"/>
+                <p t-if="perk.tag_ids" class="dbd-tags"><span t-foreach="perk.tag_ids" t-as="tag" t-out="tag.name"/></p>
+            </div>
+        </div>
+    </template>
+
+    <template id="perks_page" name="DbD: perks">
+        <t t-call="dbd.layout" page_title="'Perks'">
+            <div class="dbd-filterable">
+                <header class="dbd-title">
+                    <h1>Perks</h1>
+                    <input type="search" class="dbd-search" placeholder="Buscar perk o personaje…"/>
+                    <span class="dbd-count"/>
+                </header>
+                <div class="dbd-filters">
+                    <div class="dbd-chips" data-filter="role">
+                        <button type="button" class="active" data-value="">Todos</button>
+                        <button type="button" data-value="survivor">Superviviente</button>
+                        <button type="button" data-value="killer">Asesino</button>
+                    </div>
+                    <div t-if="tags" class="dbd-chips" data-filter="tags">
+                        <button type="button" class="active" data-value="">Todas las etiquetas</button>
+                        <button t-foreach="tags" t-as="tag" type="button" t-att-data-value="tag.id" t-out="tag.name"/>
+                    </div>
+                </div>
+                <div class="dbd-grid dbd-grid-perks">
+                    <t t-foreach="perks" t-as="perk"><t t-call="dbd.perk_card" perk="perk"/></t>
+                </div>
+                <p class="dbd-empty" hidden="">Ningún perk coincide con los filtros.</p>
+            </div>
+        </t>
+    </template>
+
+    <!-- ================= Complementos y ofrendas ================= -->
+    <!-- Tarjeta con el fondo del color de la rareza, como en el juego. `item` es un dbd.addon o un dbd.offering. -->
+    <template id="item_card" name="DbD: tarjeta de objeto">
+        <t t-set="is_offering" t-value="item._name == 'dbd.offering'"/>
+        <div t-attf-class="dbd-card dbd-item dbd-rarity-#{item.rarity}"
+             t-att-data-rarity="item.rarity" t-att-data-role="item.role"
+             t-att-data-owner="(item.category if is_offering else (item.killer_id and 'k%s' % item.killer_id.id or item.item_type)) or ''"
+             t-att-data-search="('%s %s' % (item.name, '' if is_offering else (item.killer_id.name or ''))).lower()">
+            <div t-attf-class="dbd-card-icon #{'dbd-offering-icon' if is_offering else ''}"><t t-call="dbd.picture" rec="item"/></div>
+            <div class="dbd-card-body">
+                <h3 t-out="item.name"/>
+                <p class="dbd-owner">
+                    <span class="dbd-rarity-label" t-field="item.rarity"/>
+                    <t t-if="is_offering"> · <span t-field="item.category"/>
+                        <t t-if="item.realm_id"> · <t t-out="item.realm_id.name"/></t>
+                    </t>
+                    <t t-elif="item.killer_id"> · <a t-attf-href="/dbd/asesinos/#{slug(item.killer_id)}" t-out="item.killer_id.name"/></t>
+                    <t t-elif="item.item_type"> · <span t-field="item.item_type"/></t>
+                </p>
+                <div class="dbd-desc" t-out="item.description"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="rarity_chips" name="DbD: filtro de rareza">
+        <div class="dbd-chips" data-filter="rarity">
+            <button type="button" class="active" data-value="">Todas las rarezas</button>
+            <button t-foreach="rarities" t-as="r" type="button" t-attf-class="dbd-chip-rarity dbd-rarity-#{r[0]}"
+                    t-att-data-value="r[0]" t-out="r[1]"/>
+        </div>
+    </template>
+
+    <template id="addons_page" name="DbD: complementos">
+        <t t-call="dbd.layout" page_title="'Complementos'">
+            <div class="dbd-filterable">
+                <header class="dbd-title">
+                    <h1>Complementos</h1>
+                    <input type="search" class="dbd-search" placeholder="Buscar complemento…"/>
+                    <span class="dbd-count"/>
+                </header>
+                <div class="dbd-filters">
+                    <div class="dbd-chips" data-filter="owner">
+                        <button type="button" class="active" data-value="">Todos</button>
+                        <button t-foreach="killers" t-as="k" type="button" t-att-data-value="'k%s' % k.id" t-out="k.name"/>
+                        <button t-foreach="item_types" t-as="it" type="button" t-att-data-value="it[0]" t-out="it[1]"/>
+                    </div>
+                    <t t-call="dbd.rarity_chips" rarities="rarities"/>
+                </div>
+                <div class="dbd-grid dbd-grid-items">
+                    <t t-foreach="addons" t-as="item"><t t-call="dbd.item_card" item="item"/></t>
+                </div>
+                <p class="dbd-empty" hidden="">Ningún complemento coincide con los filtros.</p>
+            </div>
+        </t>
+    </template>
+
+    <template id="offerings_page" name="DbD: ofrendas">
+        <t t-call="dbd.layout" page_title="'Ofrendas'">
+            <div class="dbd-filterable">
+                <header class="dbd-title">
+                    <h1>Ofrendas</h1>
+                    <input type="search" class="dbd-search" placeholder="Buscar ofrenda…"/>
+                    <span class="dbd-count"/>
+                </header>
+                <div class="dbd-filters">
+                    <div class="dbd-chips" data-filter="role">
+                        <button type="button" class="active" data-value="">Todos</button>
+                        <button type="button" data-value="survivor both">Superviviente</button>
+                        <button type="button" data-value="killer both">Asesino</button>
+                    </div>
+                    <div class="dbd-chips" data-filter="owner">
+                        <button type="button" class="active" data-value="">Todos los tipos</button>
+                        <button t-foreach="categories" t-as="c" type="button" t-att-data-value="c[0]" t-out="c[1]"/>
+                    </div>
+                    <t t-call="dbd.rarity_chips" rarities="rarities"/>
+                </div>
+                <div class="dbd-grid dbd-grid-items">
+                    <t t-foreach="offerings" t-as="item"><t t-call="dbd.item_card" item="item"/></t>
+                </div>
+                <p class="dbd-empty" hidden="">Ninguna ofrenda coincide con los filtros.</p>
+            </div>
+        </t>
+    </template>
+
+    <!-- ================= Builds ================= -->
+    <!-- Cargadout como en el juego: retrato, 4 perks en rombo, objeto/poder + 2 complementos y ofrenda.
+         Lo pinta static/src/js/loadout.js; build.js (editor) y random.js (ruleta) lo usan. -->
+    <template id="loadout" name="DbD: loadout">
+        <div class="dbd-loadout" t-att-data-logged="'1' if logged else '0'" t-att-data-can-save="'1' if can_save else '0'">
+            <div class="dbd-role-switch">
+                <button type="button" data-role="survivor" class="active">Superviviente</button>
+                <button type="button" data-role="killer">Asesino</button>
+            </div>
+            <div class="dbd-loadout-body">
+                <div class="dbd-slot dbd-slot-character" data-slot="character"/>
+                <div class="dbd-loadout-right">
+                    <div class="dbd-perk-diamond">
+                        <div class="dbd-slot dbd-slot-perk" data-slot="perk" data-index="0"/>
+                        <div class="dbd-slot dbd-slot-perk" data-slot="perk" data-index="1"/>
+                        <div class="dbd-slot dbd-slot-perk" data-slot="perk" data-index="2"/>
+                        <div class="dbd-slot dbd-slot-perk" data-slot="perk" data-index="3"/>
+                    </div>
+                    <div class="dbd-loadout-items">
+                        <div class="dbd-slot dbd-slot-item" data-slot="item"/>
+                        <div class="dbd-slot dbd-slot-addon" data-slot="addon" data-index="0"/>
+                        <div class="dbd-slot dbd-slot-addon" data-slot="addon" data-index="1"/>
+                        <div class="dbd-slot dbd-slot-offering" data-slot="offering"/>
+                    </div>
+                </div>
+            </div>
+            <p class="dbd-loadout-msg dbd-muted" hidden=""/>
+        </div>
+    </template>
+
+    <template id="build_page" name="DbD: crear build">
+        <t t-call="dbd.layout" page_title="'Crear build'">
+            <header class="dbd-title"><h1>Crear build</h1></header>
+            <div class="dbd-build-page">
+                <t t-call="dbd.loadout" logged="logged" can_save="can_save"/>
+                <div class="dbd-build-actions">
+                    <input type="text" class="dbd-search dbd-build-name" maxlength="80" placeholder="Nombre de la build"/>
+                    <label class="dbd-public-check" title="Las públicas salen en «Builds» para todo el mundo">
+                        <input type="checkbox" class="dbd-build-public"/> Pública
+                    </label>
+                    <button type="button" class="dbd-btn dbd-btn-red" data-action="save">Guardar</button>
+                    <button type="button" class="dbd-btn" data-action="new">Nueva</button>
+                    <button type="button" class="dbd-btn" data-action="link">Copiar enlace</button>
+                    <button type="button" class="dbd-btn" data-action="clear">Vaciar</button>
+                </div>
+                <textarea class="dbd-search dbd-build-note" rows="2" maxlength="2000" placeholder="Notas (opcional)"/>
+                <p t-if="not can_save" class="dbd-muted">Tu usuario no tiene acceso a las builds de Dead by Daylight.</p>
+                <section t-if="can_save" class="dbd-section">
+                    <h2>Mis builds</h2>
+                    <div class="dbd-my-builds"><p class="dbd-muted">Cargando…</p></div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="random_page" name="DbD: build aleatoria">
+        <t t-call="dbd.layout" page_title="'Build aleatoria'">
+            <header class="dbd-title"><h1>Build aleatoria</h1></header>
+            <div class="dbd-random-page">
+                <div class="dbd-random-options">
+                    <label><input type="checkbox" data-opt="character" checked=""/> Personaje al azar</label>
+                    <label><input type="checkbox" data-opt="item" checked=""/> Objeto / poder y complementos</label>
+                    <label><input type="checkbox" data-opt="offering" checked=""/> Ofrenda</label>
+                    <label><input type="checkbox" data-opt="noEvent" checked=""/> Sin objetos de evento</label>
+                    <label><input type="checkbox" data-opt="fast"/> Rápido (sin animación)</label>
+                </div>
+                <details class="dbd-pool" open="">
+                    <summary>Personajes en el sorteo <span class="dbd-pool-count"/></summary>
+                    <div class="dbd-pool-actions">
+                        <button type="button" class="dbd-btn" data-pool="all">Marcar todos</button>
+                        <button type="button" class="dbd-btn" data-pool="none">Quitar todos</button>
+                        <span class="dbd-muted dbd-pool-hint" t-if="can_save">Se guarda solo en tu cuenta.</span>
+                        <span class="dbd-muted dbd-pool-hint" t-else="">Inicia sesión para que se recuerde.</span>
+                    </div>
+                    <div class="dbd-pool-grid"/>
+                </details>
+                <t t-call="dbd.loadout" logged="logged" can_save="can_save"/>
+                <div class="dbd-build-actions">
+                    <button type="button" class="dbd-btn dbd-btn-red dbd-btn-big" data-action="spin">¡Girar la ruleta!</button>
+                    <button type="button" class="dbd-btn" data-action="next">Siguiente casilla</button>
+                    <button type="button" class="dbd-btn" data-action="edit">Abrir en el editor</button>
+                    <t t-if="can_save">
+                        <label class="dbd-public-check"><input type="checkbox" class="dbd-build-public"/> Pública</label>
+                        <button type="button" class="dbd-btn" data-action="save">Guardar</button>
+                    </t>
+                    <a t-else="" class="dbd-btn" href="/web/login?redirect=%2Fdbd%2Faleatoria">Inicia sesión para guardar</a>
+                    <button type="button" class="dbd-btn" data-action="link">Copiar enlace</button>
+                </div>
+                <p class="dbd-muted">«¡Girar la ruleta!» saca todo, casilla a casilla. Quita personajes del sorteo pulsando
+                    su retrato arriba. «Siguiente casilla» va de una en una.
+                    Pulsa cualquier casilla para volver a girar solo esa; elige el personaje fijo desactivando «Personaje al azar».</p>
+            </div>
+        </t>
+    </template>
+
+    <template id="builds_page" name="DbD: builds publicadas">
+        <t t-call="dbd.layout" page_title="'Builds'">
+            <div class="dbd-builds-page" t-att-data-can-save="'1' if can_save else '0'">
+                <header class="dbd-title">
+                    <h1>Builds</h1>
+                    <input type="search" class="dbd-search" placeholder="Buscar build, personaje, perk o autor…"/>
+                    <span class="dbd-count"/>
+                </header>
+                <div class="dbd-filters">
+                    <div class="dbd-chips dbd-builds-source">
+                        <button type="button" class="active" data-source="public">Publicadas</button>
+                        <button t-if="can_save" type="button" data-source="mine">Mías</button>
+                    </div>
+                    <div class="dbd-chips" data-filter="role">
+                        <button type="button" class="active" data-value="">Todas</button>
+                        <button type="button" data-value="survivor">Superviviente</button>
+                        <button type="button" data-value="killer">Asesino</button>
+                    </div>
+                </div>
+                <div class="dbd-build-list"><p class="dbd-muted">Cargando…</p></div>
+                <p class="dbd-empty" hidden="">Ninguna build coincide.</p>
+                <p class="dbd-muted">
+                    <a href="/dbd/build">Crear build</a> (hay que iniciar sesión) · <a href="/dbd/aleatoria">Build aleatoria</a>
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <template id="build_view_page" name="DbD: ver build">
+        <t t-call="dbd.layout" page_title="'Build'">
+            <a class="dbd-back" href="/dbd/builds">‹ Builds</a>
+            <div class="dbd-build-view">
+                <header class="dbd-title">
+                    <h1 class="dbd-view-name">Build</h1>
+                    <span class="dbd-muted dbd-view-meta"/>
+                </header>
+                <div class="dbd-readonly"><t t-call="dbd.loadout" logged="logged" can_save="can_save"/></div>
+                <p class="dbd-view-note"/>
+                <div class="dbd-build-actions">
+                    <a class="dbd-btn dbd-btn-red dbd-view-copy" href="/dbd/build">Copiar y editar</a>
+                    <button type="button" class="dbd-btn" data-action="link">Copiar enlace</button>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ================= Mapas ================= -->
+    <template id="maps_page" name="DbD: mapas">
+        <t t-call="dbd.layout" page_title="'Mapas'">
+            <header class="dbd-title"><h1>Reinos y mapas</h1></header>
+            <section t-foreach="realms" t-as="realm" class="dbd-realm">
+                <div class="dbd-realm-head">
+                    <div class="dbd-realm-image"><t t-call="dbd.picture" rec="realm"/></div>
+                    <div>
+                        <h2 t-out="realm.name"/>
+                        <div class="dbd-desc" t-out="realm.description"/>
+                        <p t-if="realm.offering_ids" class="dbd-tags">
+                            <span t-foreach="realm.offering_ids" t-as="o">Ofrenda: <t t-out="o.name"/></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="dbd-grid dbd-grid-maps">
+                    <div t-foreach="realm.map_ids" t-as="m" class="dbd-map">
+                        <div class="dbd-map-image"><t t-call="dbd.picture" rec="m"/></div>
+                        <h3 t-out="m.name"/>
+                        <p t-if="m.size" class="dbd-owner" t-field="m.size"/>
+                        <div t-if="m.description" class="dbd-desc" t-out="m.description"/>
+                    </div>
+                </div>
+            </section>
+            <p t-if="not realms" class="dbd-muted">Aún no hay reinos.</p>
+        </t>
+    </template>
+</odoo>

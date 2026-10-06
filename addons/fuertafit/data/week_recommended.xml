@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Semanas recomendadas (comunes y de solo lectura) para 3, 4 y 5 días y 30/45/50/60 min.
+     Generadas con un script; el primer grupo de cada día es el principal (se lleva ~60 % del tiempo). -->
+<odoo noupdate="0">
+    <record id="week_rec_3d_30" model="fuerta.week.plan">
+        <field name="name">Fullbody 3 días (L/X/V) · 30 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">30</field>
+        <field name="sequence">1</field>
+        <field name="week" eval="{'0': ['Fullbody'], '1': [], '2': ['Fullbody'], '3': [], '4': ['Fullbody'], '5': [], '6': []}"/>
+        <field name="description">Cuerpo completo en días alternos: cada grupo muscular 3 veces por semana con 48 h de descanso entre sesiones (pauta ACSM para 2-3 días por semana). Desde 45 min, core y cardio repartidos. 30 min: tras el calentamiento, un único bloque de fuerza para que el tiempo rinda.</field>
+    </record>
+    <record id="week_rec_3d_45" model="fuerta.week.plan">
+        <field name="name">Fullbody 3 días (L/X/V) · 45 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">45</field>
+        <field name="sequence">2</field>
+        <field name="week" eval="{'0': ['Fullbody', 'Core'], '1': [], '2': ['Fullbody', 'Cardio'], '3': [], '4': ['Fullbody', 'Core'], '5': [], '6': []}"/>
+        <field name="description">Cuerpo completo en días alternos: cada grupo muscular 3 veces por semana con 48 h de descanso entre sesiones (pauta ACSM para 2-3 días por semana). Desde 45 min, core y cardio repartidos. 45 min: bloque principal (unos 2/3 del tiempo) más un bloque corto de core o cardio.</field>
+    </record>
+    <record id="week_rec_3d_50" model="fuerta.week.plan">
+        <field name="name">Fullbody 3 días (L/X/V) · 50 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">50</field>
+        <field name="sequence">3</field>
+        <field name="week" eval="{'0': ['Fullbody', 'Core'], '1': [], '2': ['Fullbody', 'Cardio'], '3': [], '4': ['Fullbody', 'Core'], '5': [], '6': []}"/>
+        <field name="description">Cuerpo completo en días alternos: cada grupo muscular 3 veces por semana con 48 h de descanso entre sesiones (pauta ACSM para 2-3 días por semana). Desde 45 min, core y cardio repartidos. 50 min: el mismo reparto que con 45, con más tiempo para el bloque principal.</field>
+    </record>
+    <record id="week_rec_3d_60" model="fuerta.week.plan">
+        <field name="name">Fullbody 3 días (L/X/V) · 60 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">60</field>
+        <field name="sequence">4</field>
+        <field name="week" eval="{'0': ['Fullbody', 'Core', 'Cardio'], '1': [], '2': ['Fullbody', 'Cardio'], '3': [], '4': ['Fullbody', 'Core', 'Cardio'], '5': [], '6': []}"/>
+        <field name="description">Cuerpo completo en días alternos: cada grupo muscular 3 veces por semana con 48 h de descanso entre sesiones (pauta ACSM para 2-3 días por semana). Desde 45 min, core y cardio repartidos. 60 min: un tercer bloque corto (core, cardio o movilidad) en los días más largos.</field>
+    </record>
+    <record id="week_rec_4d_30" model="fuerta.week.plan">
+        <field name="name">Torso / pierna 4 días (L/M/J/V) · 30 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">30</field>
+        <field name="sequence">5</field>
+        <field name="week" eval="{'0': ['Pierna y glúteo'], '1': ['Torso'], '2': [], '3': ['Pierna y glúteo'], '4': ['Torso'], '5': [], '6': []}"/>
+        <field name="description">Rutina dividida en tren inferior y superior (upper/lower) con el miércoles libre: cada zona 2 veces por semana y al menos 72 h entre sesiones de la misma zona (pauta NSCA para 4 días). Desde 45 min, core tras pierna y cardio tras torso. 30 min: tras el calentamiento, un único bloque de fuerza para que el tiempo rinda.</field>
+    </record>
+    <record id="week_rec_4d_45" model="fuerta.week.plan">
+        <field name="name">Torso / pierna 4 días (L/M/J/V) · 45 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">45</field>
+        <field name="sequence">6</field>
+        <field name="week" eval="{'0': ['Pierna y glúteo', 'Core'], '1': ['Torso', 'Cardio'], '2': [], '3': ['Pierna y glúteo', 'Core'], '4': ['Torso', 'Cardio'], '5': [], '6': []}"/>
+        <field name="description">Rutina dividida en tren inferior y superior (upper/lower) con el miércoles libre: cada zona 2 veces por semana y al menos 72 h entre sesiones de la misma zona (pauta NSCA para 4 días). Desde 45 min, core tras pierna y cardio tras torso. 45 min: bloque principal (unos 2/3 del tiempo) más un bloque corto de core o cardio.</field>
+    </record>
+    <record id="week_rec_4d_50" model="fuerta.week.plan">
+        <field name="name">Torso / pierna 4 días (L/M/J/V) · 50 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">50</field>
+        <field name="sequence">7</field>
+        <field name="week" eval="{'0': ['Pierna y glúteo', 'Core'], '1': ['Torso', 'Cardio'], '2': [], '3': ['Pierna y glúteo', 'Core'], '4': ['Torso', 'Cardio'], '5': [], '6': []}"/>
+        <field name="description">Rutina dividida en tren inferior y superior (upper/lower) con el miércoles libre: cada zona 2 veces por semana y al menos 72 h entre sesiones de la misma zona (pauta NSCA para 4 días). Desde 45 min, core tras pierna y cardio tras torso. 50 min: el mismo reparto que con 45, con más tiempo para el bloque principal.</field>
+    </record>
+    <record id="week_rec_4d_60" model="fuerta.week.plan">
+        <field name="name">Torso / pierna 4 días (L/M/J/V) · 60 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">60</field>
+        <field name="sequence">8</field>
+        <field name="week" eval="{'0': ['Pierna y glúteo', 'Core', 'Cuerpo-Mente'], '1': ['Torso', 'Cardio'], '2': [], '3': ['Pierna y glúteo', 'Core', 'Cuerpo-Mente'], '4': ['Torso', 'Cardio'], '5': [], '6': []}"/>
+        <field name="description">Rutina dividida en tren inferior y superior (upper/lower) con el miércoles libre: cada zona 2 veces por semana y al menos 72 h entre sesiones de la misma zona (pauta NSCA para 4 días). Desde 45 min, core tras pierna y cardio tras torso. 60 min: un tercer bloque corto (core, cardio o movilidad) en los días más largos.</field>
+    </record>
+    <record id="week_rec_5d_30" model="fuerta.week.plan">
+        <field name="name">Pierna / torso + cardio 5 días (L-V) · 30 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">30</field>
+        <field name="sequence">9</field>
+        <field name="week" eval="{'0': ['Pierna y glúteo'], '1': ['Torso'], '2': ['Cardio'], '3': ['Pierna y glúteo'], '4': ['Torso'], '5': [], '6': []}"/>
+        <field name="description">Pierna y torso 2 veces por semana cada uno, con el miércoles de cardio y movilidad como recuperación activa entre los dos bloques de fuerza (pautas ACSM/OMS: fuerza 2+ días por grupo, cardio varios días y flexibilidad). Fin de semana de descanso. 30 min: tras el calentamiento, un único bloque de fuerza para que el tiempo rinda.</field>
+    </record>
+    <record id="week_rec_5d_45" model="fuerta.week.plan">
+        <field name="name">Pierna / torso + cardio 5 días (L-V) · 45 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">45</field>
+        <field name="sequence">10</field>
+        <field name="week" eval="{'0': ['Pierna y glúteo', 'Core'], '1': ['Torso', 'Cardio'], '2': ['Cardio', 'Cuerpo-Mente'], '3': ['Pierna y glúteo', 'Core'], '4': ['Torso', 'Cardio'], '5': [], '6': []}"/>
+        <field name="description">Pierna y torso 2 veces por semana cada uno, con el miércoles de cardio y movilidad como recuperación activa entre los dos bloques de fuerza (pautas ACSM/OMS: fuerza 2+ días por grupo, cardio varios días y flexibilidad). Fin de semana de descanso. 45 min: bloque principal (unos 2/3 del tiempo) más un bloque corto de core o cardio.</field>
+    </record>
+    <record id="week_rec_5d_50" model="fuerta.week.plan">
+        <field name="name">Pierna / torso + cardio 5 días (L-V) · 50 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">50</field>
+        <field name="sequence">11</field>
+        <field name="week" eval="{'0': ['Pierna y glúteo', 'Core'], '1': ['Torso', 'Cardio'], '2': ['Cardio', 'Cuerpo-Mente'], '3': ['Pierna y glúteo', 'Core'], '4': ['Torso', 'Cardio'], '5': [], '6': []}"/>
+        <field name="description">Pierna y torso 2 veces por semana cada uno, con el miércoles de cardio y movilidad como recuperación activa entre los dos bloques de fuerza (pautas ACSM/OMS: fuerza 2+ días por grupo, cardio varios días y flexibilidad). Fin de semana de descanso. 50 min: el mismo reparto que con 45, con más tiempo para el bloque principal.</field>
+    </record>
+    <record id="week_rec_5d_60" model="fuerta.week.plan">
+        <field name="name">Pierna / torso + cardio 5 días (L-V) · 60 min</field>
+        <field name="user_id" eval="False"/>
+        <field name="recommended" eval="True"/>
+        <field name="minutes">60</field>
+        <field name="sequence">12</field>
+        <field name="week" eval="{'0': ['Pierna y glúteo', 'Core', 'Cuerpo-Mente'], '1': ['Torso', 'Cardio'], '2': ['Cardio', 'Cuerpo-Mente'], '3': ['Pierna y glúteo', 'Core', 'Cuerpo-Mente'], '4': ['Torso', 'Cardio'], '5': [], '6': []}"/>
+        <field name="description">Pierna y torso 2 veces por semana cada uno, con el miércoles de cardio y movilidad como recuperación activa entre los dos bloques de fuerza (pautas ACSM/OMS: fuerza 2+ días por grupo, cardio varios días y flexibilidad). Fin de semana de descanso. 60 min: un tercer bloque corto (core, cardio o movilidad) en los días más largos.</field>
+    </record>
+</odoo>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="away_wizard_view_form" model="ir.ui.view">
+        <field name="name">fuerta.away.wizard.form</field>
+        <field name="model">fuerta.away.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Marcar ausencia">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="note" placeholder="vacaciones, viaje…"/>
+                        <field name="remove_plans"/>
+                    </group>
+                </group>
+                <p class="text-muted">En esos días no se generan rutinas automáticas.</p>
+                <footer>
+                    <button name="action_apply" type="object" string="Marcar como fuera" class="btn-primary"/>
+                    <button special="cancel" string="Cancelar"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_away_wizard" model="ir.actions.act_window">
+        <field name="name">Marcar ausencia</field>
+        <field name="res_model">fuerta.away.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="routine_import_view_form" model="ir.ui.view">
+        <field name="name">fuerta.routine.import.form</field>
+        <field name="model">fuerta.routine.import</field>
+        <field name="arch" type="xml">
+            <form string="Importar rutinas">
+                <p class="text-muted">Lo normal es usar el marcador «⟳ Actualizar Fuerta» de la web (pestaña Actualizar).
+                    Aquí puedes subir o pegar el mismo JSON: una lista de rutinas de FuertaFit o {"items": [...]}.
+                    Las que ya existen se actualizan.</p>
+                <group>
+                    <field name="file" filename="filename"/>
+                    <field name="filename" invisible="1"/>
+                    <field name="payload" invisible="file" placeholder='[{"id": 123, "title": "…", "durationMinutes": 20, …}]'/>
+                </group>
+                <footer>
+                    <button name="action_import" type="object" string="Importar" class="btn-primary"/>
+                    <button special="cancel" string="Cancelar"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_routine_import" model="ir.actions.act_window">
+        <field name="name">Importar rutinas</field>
+        <field name="res_model">fuerta.routine.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

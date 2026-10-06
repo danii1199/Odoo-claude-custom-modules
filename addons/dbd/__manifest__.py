@@ -1,0 +1,28 @@
+{
+    "name": "Dead by Daylight",
+    "summary": "Enciclopedia de Dead by Daylight: supervivientes, asesinos, perks, complementos, mapas y ofrendas",
+    "description": "Catálogo del videojuego editable desde el backend y publicado en el sitio web (/dbd) "
+                   "con un diseño inspirado en el juego.",
+    "version": "20.0.1.4.0",
+    "category": "Website",
+    "author": "danii1199",
+    "license": "LGPL-3",
+    "depends": ["base", "web", "website"],
+    "data": [
+        "security/groups.xml",
+        "security/ir.access.csv",
+        "data/website_menu.xml",
+        "data/signup.xml",
+        "data/datos_iniciales.xml",
+        "views/character_views.xml",
+        "views/perk_views.xml",
+        "views/item_views.xml",
+        "views/map_views.xml",
+        "views/build_views.xml",
+        "views/import_views.xml",
+        "views/menus.xml",
+        "views/web_templates.xml",
+    ],
+    "application": True,
+    "installable": True,
+}

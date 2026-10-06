@@ -1,0 +1,133 @@
+// Pantalla de inicio: ocupa todo bajo la barra, con fondo degradado y los iconos de las apps.
+.o_menu_inicio {
+    position: fixed;
+    inset: var(--o-navbar-height, 46px) 0 0 0;
+    z-index: 990; // por encima de la acción, por debajo de desplegables, diálogos y notificaciones
+    overflow-y: auto;
+    background: linear-gradient(135deg, #3c2a4d 0%, #6b4a7a 45%, #2f6f7a 100%);
+    color: #fff;
+}
+
+// Con el menú abierto, la acción de detrás no se ve ni recibe clics (nada «asoma» por encima del menú).
+.o_web_client:has(.o_menu_inicio) .o_action_manager {
+    visibility: hidden;
+}
+
+.o_menu_inicio_inner {
+    max-width: 880px;
+    padding: 6vh 16px 48px;
+}
+
+.o_menu_inicio_search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto 5vh;
+    max-width: 520px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+
+    input {
+        flex: 1;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: #fff;
+        font-size: 1.05rem;
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+}
+
+.o_menu_inicio_apps {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 28px 12px;
+}
+
+.o_menu_inicio_app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 4px;
+    border-radius: 12px;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+
+    &:hover,
+    &:focus,
+    &.focused {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    &:hover .o_menu_inicio_icon {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.o_menu_inicio_icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.o_menu_inicio_icon_built {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.o_menu_inicio_name {
+    font-size: 0.9rem;
+    line-height: 1.2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.o_menu_inicio_results {
+    max-width: 640px;
+    margin: 0 auto;
+
+    li {
+        padding: 10px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+
+        &:hover,
+        &.focused {
+            background: rgba(255, 255, 255, 0.15);
+        }
+    }
+
+    .o_menu_inicio_empty {
+        cursor: default;
+        opacity: 0.75;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .o_menu_inicio_apps {
+        grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+        gap: 20px 6px;
+    }
+
+    .o_menu_inicio_icon {
+        width: 54px;
+        height: 54px;
+    }
+}
+
+// Botón de la barra: sin la flechita de desplegable (ya no es un desplegable)
+.o_main_navbar .o_menu_inicio_toggle::after {
+    display: none;
+}

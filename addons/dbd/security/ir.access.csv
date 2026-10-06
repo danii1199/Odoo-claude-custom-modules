@@ -1,0 +1,46 @@
+id,name,model_id,group_id/id,operation,domain
+access_survivor_public,Supervivientes: lectura (visitantes de la web),dbd.survivor,base.group_public,r,
+access_survivor_portal,Supervivientes: lectura (portal),dbd.survivor,base.group_portal,r,
+access_survivor_user,Supervivientes: lectura (usuarios del módulo),dbd.survivor,dbd.group_dbd_user,r,
+access_survivor_admin,Supervivientes: administración,dbd.survivor,dbd.group_dbd_manager,crud,
+access_killer_public,Asesinos: lectura (visitantes de la web),dbd.killer,base.group_public,r,
+access_killer_portal,Asesinos: lectura (portal),dbd.killer,base.group_portal,r,
+access_killer_user,Asesinos: lectura (usuarios del módulo),dbd.killer,dbd.group_dbd_user,r,
+access_killer_admin,Asesinos: administración,dbd.killer,dbd.group_dbd_manager,crud,
+access_perk_public,Perks: lectura (visitantes de la web),dbd.perk,base.group_public,r,
+access_perk_portal,Perks: lectura (portal),dbd.perk,base.group_portal,r,
+access_perk_user,Perks: lectura (usuarios del módulo),dbd.perk,dbd.group_dbd_user,r,
+access_perk_admin,Perks: administración,dbd.perk,dbd.group_dbd_manager,crud,
+access_perk_tag_public,Etiquetas de perks: lectura (visitantes de la web),dbd.perk.tag,base.group_public,r,
+access_perk_tag_portal,Etiquetas de perks: lectura (portal),dbd.perk.tag,base.group_portal,r,
+access_perk_tag_user,Etiquetas de perks: lectura (usuarios del módulo),dbd.perk.tag,dbd.group_dbd_user,r,
+access_perk_tag_admin,Etiquetas de perks: administración,dbd.perk.tag,dbd.group_dbd_manager,crud,
+access_addon_public,Complementos: lectura (visitantes de la web),dbd.addon,base.group_public,r,
+access_addon_portal,Complementos: lectura (portal),dbd.addon,base.group_portal,r,
+access_addon_user,Complementos: lectura (usuarios del módulo),dbd.addon,dbd.group_dbd_user,r,
+access_addon_admin,Complementos: administración,dbd.addon,dbd.group_dbd_manager,crud,
+access_realm_public,Reinos: lectura (visitantes de la web),dbd.realm,base.group_public,r,
+access_realm_portal,Reinos: lectura (portal),dbd.realm,base.group_portal,r,
+access_realm_user,Reinos: lectura (usuarios del módulo),dbd.realm,dbd.group_dbd_user,r,
+access_realm_admin,Reinos: administración,dbd.realm,dbd.group_dbd_manager,crud,
+access_map_public,Mapas: lectura (visitantes de la web),dbd.map,base.group_public,r,
+access_map_portal,Mapas: lectura (portal),dbd.map,base.group_portal,r,
+access_map_user,Mapas: lectura (usuarios del módulo),dbd.map,dbd.group_dbd_user,r,
+access_map_admin,Mapas: administración,dbd.map,dbd.group_dbd_manager,crud,
+access_offering_public,Ofrendas: lectura (visitantes de la web),dbd.offering,base.group_public,r,
+access_offering_portal,Ofrendas: lectura (portal),dbd.offering,base.group_portal,r,
+access_offering_user,Ofrendas: lectura (usuarios del módulo),dbd.offering,dbd.group_dbd_user,r,
+access_offering_admin,Ofrendas: administración,dbd.offering,dbd.group_dbd_manager,crud,
+access_import_wizard_admin,Asistente de actualizar catálogo,dbd.import.wizard,dbd.group_dbd_manager,crud,
+access_item_public,Objetos: lectura (visitantes de la web),dbd.item,base.group_public,r,
+access_item_portal,Objetos: lectura (portal),dbd.item,base.group_portal,r,
+access_item_user,Objetos: lectura (usuarios del módulo),dbd.item,dbd.group_dbd_user,r,
+access_item_admin,Objetos: administración,dbd.item,dbd.group_dbd_manager,crud,
+access_build_user,Builds: solo las propias,dbd.build,dbd.group_dbd_user,crud,"[('user_id', '=', user.id)]"
+access_build_admin,Builds: lectura de todas,dbd.build,dbd.group_dbd_manager,r,
+access_build_portal,Builds: solo las propias (portal),dbd.build,base.group_portal,crud,"[('user_id', '=', user.id)]"
+access_build_public_read,Builds públicas: lectura (visitantes),dbd.build,base.group_public,r,"[('is_public', '=', True)]"
+access_build_portal_public_read,Builds públicas: lectura (portal),dbd.build,base.group_portal,r,"[('is_public', '=', True)]"
+access_build_user_public_read,Builds públicas: lectura (usuarios del módulo),dbd.build,dbd.group_dbd_user,r,"[('is_public', '=', True)]"
+access_random_pref_user,Sorteo: solo las propias,dbd.random.pref,dbd.group_dbd_user,crud,"[('user_id', '=', user.id)]"
+access_random_pref_portal,Sorteo: solo las propias (portal),dbd.random.pref,base.group_portal,crud,"[('user_id', '=', user.id)]"
