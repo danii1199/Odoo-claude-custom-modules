@@ -46,7 +46,7 @@ addons/                extra-addons: cada carpeta es un módulo (nombre técnico
   contraseña maestra (`ODOO_MASTER_PASSWORD` en `.env`; **no la muestres**). Odoo solo lista las bases cuyo dueño es `odoo`.
 - Por consola: `odoo db {init,duplicate,dump,load,rename,drop}` y `odoo module {install,upgrade,uninstall,list}`
   dentro del contenedor (`docker compose exec -T odoo odoo ...`). Gestionan también el filestore.
-- Bases actuales (2026-10-05): `claude-main` (la principal, con fuertafit y menu_inicio: **datos reales**),
+- Bases actuales (2026-10-05): `claude-main` (la principal, con fuertafit, menu_inicio y dbd con el catálogo completo: **datos reales**),
   `claude-test` (pruebas del usuario: fuertafit, menu_inicio y dbd con el catálogo completo) y `rutinas` (web
   antigua de fuertafit, solo para migrar). La base `fuertafit` ya no existe. La de la app antigua de myspoty ya no
   importa al usuario.

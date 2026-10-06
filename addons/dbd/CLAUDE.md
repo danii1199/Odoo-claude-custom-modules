@@ -6,7 +6,8 @@ con un diseño inspirado en el juego. Esta carpeta (`addons/dbd`) **es el módul
 son comunes (`../../CLAUDE.md`, skills `odoo-docker`, `odoo-bases-de-datos`, `probar-modulo`).
 
 Decisión del usuario (2026-10-05): portal **separado de fuertafit** (su propia base de datos y sitio web, portada
-`/dbd`). Ahora vive en la base de pruebas `claude-test`, que creó el usuario, con el catálogo completo importado.
+`/dbd`). El catálogo completo está en `claude-main` (la real, importado el 2026-10-05; copia previa en
+`../copias-seguridad/claude-main-2026-10-05-antes-dbd.zip`) y en la base de pruebas `claude-test`.
 
 ## Estructura
 
@@ -66,8 +67,8 @@ static/src/   css/dbd.css (bajo .dbd-app y #wrapwrap.dbd-page; .dbd-picker y .db
 ## Actualizar (desde la raíz del repo)
 
 ```bash
-sg docker -c "docker compose exec -T odoo odoo module upgrade -d claude-test dbd && docker compose restart odoo"
-sg docker -c "docker compose exec -T odoo odoo shell -d claude-test --no-http < addons/dbd/scripts/actualizar_catalogo.py"
+sg docker -c "docker compose exec -T odoo odoo module upgrade -d claude-main dbd && docker compose restart odoo"
+sg docker -c "docker compose exec -T odoo odoo shell -d claude-main --no-http < addons/dbd/scripts/actualizar_catalogo.py"
 ```
 Solo CSS/JS: recargar el navegador (el `?v=` cambia al reiniciar Odoo).
 
@@ -91,7 +92,7 @@ Solo CSS/JS: recargar el navegador (el `?v=` cambia al reiniciar Odoo).
   58 mapas; 20 imágenes sin encontrar (complementos con el mismo nombre en varios asesinos, 5 poderes y 2 ofrendas
   de evento): la web pinta la inicial.
 - Los ejemplos de `data/datos_iniciales.xml` se emparejan por nombre; en `claude-test` se **archivaron** (no
-  borraron) 4 que estaban duplicados o ya no existen en el juego.
+  borraron) 4 que estaban duplicados o ya no existen en el juego; en `claude-main` se emparejaron todos.
 
 ## Builds (2026-10-05)
 
