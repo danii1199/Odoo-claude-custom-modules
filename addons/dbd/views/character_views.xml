@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================= Supervivientes ================= -->
+    <record id="survivor_view_kanban" model="ir.ui.view">
+        <field name="name">dbd.survivor.kanban</field>
+        <field name="model">dbd.survivor</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside class="o_kanban_aside_full">
+                            <field name="image" widget="image" options="{'size': [80, 80], 'img_class': 'object-fit-cover'}"/>
+                        </aside>
+                        <main class="ms-2">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="chapter" class="text-muted"/>
+                            <span><field name="perk_count"/> perks</span>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="survivor_view_list" model="ir.ui.view">
+        <field name="name">dbd.survivor.list</field>
+        <field name="model">dbd.survivor</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="chapter"/>
+                <field name="release_date" optional="show"/>
+                <field name="difficulty" optional="show"/>
+                <field name="licensed" optional="hide"/>
+                <field name="perk_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="survivor_view_form" model="ir.ui.view">
+        <field name="name">dbd.survivor.form</field>
+        <field name="model">dbd.survivor</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+                    <div class="oe_title"><h1><field name="name" placeholder="Nombre del superviviente"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="chapter"/>
+                            <field name="release_date"/>
+                        </group>
+                        <group>
+                            <field name="difficulty"/>
+                            <field name="licensed"/>
+                            <field name="dbd_key" groups="base.group_no_one"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Perks" name="perks">
+                            <field name="perk_ids" context="{'default_role': 'survivor'}">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="image" widget="image" options="{'size': [32, 32]}"/>
+                                    <field name="name"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Historia" name="lore">
+                            <field name="bio" placeholder="Resumen: estilo de juego y perks propios"/>
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="survivor_view_search" model="ir.ui.view">
+        <field name="name">dbd.survivor.search</field>
+        <field name="model">dbd.survivor</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="chapter"/>
+                <filter name="licensed" string="Licenciados" domain="[('licensed', '=', True)]"/>
+                <filter name="original" string="Originales" domain="[('licensed', '=', False)]"/>
+                <separator/>
+                <filter name="archived" string="Archivados" domain="[('active', '=', False)]"/>
+                <filter name="by_difficulty" string="Dificultad" context="{'group_by': 'difficulty'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_survivors" model="ir.actions.act_window">
+        <field name="name">Supervivientes</field>
+        <field name="res_model">dbd.survivor</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Añade el primer superviviente</p>
+        </field>
+    </record>
+
+    <!-- ================= Asesinos ================= -->
+    <record id="killer_view_kanban" model="ir.ui.view">
+        <field name="name">dbd.killer.kanban</field>
+        <field name="model">dbd.killer</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside class="o_kanban_aside_full">
+                            <field name="image" widget="image" options="{'size': [80, 80], 'img_class': 'object-fit-cover'}"/>
+                        </aside>
+                        <main class="ms-2">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="real_name" class="text-muted"/>
+                            <field name="power_name"/>
+                            <span><field name="perk_count"/> perks · <field name="addon_count"/> complementos</span>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="killer_view_list" model="ir.ui.view">
+        <field name="name">dbd.killer.list</field>
+        <field name="model">dbd.killer</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="real_name" optional="show"/>
+                <field name="power_name"/>
+                <field name="speed" optional="show"/>
+                <field name="terror_radius" optional="show"/>
+                <field name="height" optional="hide"/>
+                <field name="chapter" optional="show"/>
+                <field name="difficulty" optional="hide"/>
+                <field name="perk_count"/>
+                <field name="addon_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="killer_view_form" model="ir.ui.view">
+        <field name="name">dbd.killer.form</field>
+        <field name="model">dbd.killer</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="El Trampero"/></h1>
+                        <h3><field name="real_name" placeholder="Nombre real"/></h3>
+                    </div>
+                    <group>
+                        <group string="Ficha">
+                            <field name="power_name"/>
+                            <field name="speed"/>
+                            <field name="terror_radius"/>
+                            <field name="height"/>
+                        </group>
+                        <group string="Publicación">
+                            <field name="chapter"/>
+                            <field name="release_date"/>
+                            <field name="difficulty"/>
+                            <field name="licensed"/>
+                            <field name="dbd_key" groups="base.group_no_one"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Poder" name="power">
+                            <field name="power_image" widget="image" options="{'size': [64, 64]}"/>
+                            <field name="power_description"/>
+                        </page>
+                        <page string="Perks" name="perks">
+                            <field name="perk_ids" context="{'default_role': 'killer'}">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="image" widget="image" options="{'size': [32, 32]}"/>
+                                    <field name="name"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Complementos" name="addons">
+                            <field name="addon_ids" context="{'default_role': 'killer'}">
+                                <list>
+                                    <field name="image" widget="image" options="{'size': [32, 32]}"/>
+                                    <field name="name"/>
+                                    <field name="rarity"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Historia" name="lore">
+                            <field name="bio" placeholder="Resumen: estilo de juego y perks propios"/>
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="killer_view_search" model="ir.ui.view">
+        <field name="name">dbd.killer.search</field>
+        <field name="model">dbd.killer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="real_name"/>
+                <field name="power_name"/>
+                <field name="chapter"/>
+                <filter name="licensed" string="Licenciados" domain="[('licensed', '=', True)]"/>
+                <filter name="original" string="Originales" domain="[('licensed', '=', False)]"/>
+                <separator/>
+                <filter name="fast" string="Rápidos (4,6 m/s)" domain="[('speed', '&gt;=', 4.6)]"/>
+                <filter name="slow" string="Lentos (menos de 4,6 m/s)" domain="[('speed', '&lt;', 4.6)]"/>
+                <separator/>
+                <filter name="archived" string="Archivados" domain="[('active', '=', False)]"/>
+                <filter name="by_height" string="Altura" context="{'group_by': 'height'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_killers" model="ir.actions.act_window">
+        <field name="name">Asesinos</field>
+        <field name="res_model">dbd.killer</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Añade el primer asesino</p>
+        </field>
+    </record>
+</odoo>

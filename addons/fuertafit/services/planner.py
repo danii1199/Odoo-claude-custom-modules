@@ -15,6 +15,7 @@ def plan_week(env, start=None, overwrite=False):
     """Rellena la semana que empieza el lunes `start` según los ajustes del plan semanal.
 
     Solo toca días de hoy en adelante con grupos asignados; sin `overwrite` respeta los que ya tienen plan.
+    Con `overwrite`, los días que ahora son de descanso pierden su plan automático (los manuales se quedan).
     Devuelve {día: [ids]} de lo generado.
     """
     s = env["fuerta.settings"].get_settings()
@@ -31,6 +32,9 @@ def plan_week(env, start=None, overwrite=False):
     for d in days:
         key = d.isoformat()
         groups = s["week"].get(str(d.weekday())) or []
+        if overwrite and not groups and d >= now and existing.get(key, {}).get("source") == "auto":
+            plans.delete_plan(key)  # ahora es día de descanso: fuera lo que generó una semana tipo anterior
+            continue
         if not groups or d < now or key in blocked or (key in existing and not overwrite):
             continue
         ids = _auto_day(env, key, groups, s, used)

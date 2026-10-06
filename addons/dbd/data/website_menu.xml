@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Entrada «Dead by Daylight» en el menú del sitio web (editable luego desde Sitio web → Menús). -->
+<odoo noupdate="1">
+    <record id="website_menu_dbd" model="website.menu">
+        <field name="name">Dead by Daylight</field>
+        <field name="url">/dbd</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">15</field>
+    </record>
+</odoo>

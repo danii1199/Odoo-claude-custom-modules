@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="perk_view_list" model="ir.ui.view">
+        <field name="name">dbd.perk.list</field>
+        <field name="model">dbd.perk</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="image" widget="image" options="{'size': [32, 32]}"/>
+                <field name="name"/>
+                <field name="role"/>
+                <field name="owner_name"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="perk_view_form" model="ir.ui.view">
+        <field name="name">dbd.perk.form</field>
+        <field name="model">dbd.perk</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title"><h1><field name="name" placeholder="Nombre del perk"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="role"/>
+                            <field name="survivor_id" invisible="role != 'survivor'"/>
+                            <field name="killer_id" invisible="role != 'killer'"/>
+                        </group>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="sequence"/>
+                            <field name="dbd_key" groups="base.group_no_one"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Qué hace el perk (con los valores de los niveles I/II/III)"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="perk_view_search" model="ir.ui.view">
+        <field name="name">dbd.perk.search</field>
+        <field name="model">dbd.perk</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="survivor_id"/>
+                <field name="killer_id"/>
+                <field name="tag_ids"/>
+                <filter name="survivor" string="De superviviente" domain="[('role', '=', 'survivor')]"/>
+                <filter name="killer" string="De asesino" domain="[('role', '=', 'killer')]"/>
+                <separator/>
+                <filter name="general" string="Generales" domain="[('is_general', '=', True)]"/>
+                <separator/>
+                <filter name="archived" string="Archivados" domain="[('active', '=', False)]"/>
+                <filter name="by_role" string="Bando" context="{'group_by': 'role'}"/>
+                <filter name="by_survivor" string="Superviviente" context="{'group_by': 'survivor_id'}"/>
+                <filter name="by_killer" string="Asesino" context="{'group_by': 'killer_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_perks" model="ir.actions.act_window">
+        <field name="name">Perks</field>
+        <field name="res_model">dbd.perk</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_by_role': 1}</field>
+    </record>
+
+    <record id="perk_tag_view_list" model="ir.ui.view">
+        <field name="name">dbd.perk.tag.list</field>
+        <field name="model">dbd.perk.tag</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_perk_tags" model="ir.actions.act_window">
+        <field name="name">Etiquetas de perks</field>
+        <field name="res_model">dbd.perk.tag</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

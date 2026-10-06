@@ -121,6 +121,17 @@
 .fuerta-app .tpl strong { font-size: 15px; }
 .fuerta-app .tpl.on { border-color: var(--accent); }
 .fuerta-app .tpl.on strong::after { content: " ✓"; color: var(--accent); }
+.fuerta-app .tpl { position: relative; cursor: pointer; }
+.fuerta-app .tpl strong { padding-right: 24px; }
+.fuerta-app .tpl .tpl-del { position: absolute; top: 6px; right: 6px; background: transparent; color: var(--muted);
+       border: 0; padding: 2px 6px; font-size: 14px; cursor: pointer; }
+.fuerta-app .tpl .tpl-del:hover { color: var(--text); }
+.fuerta-app .tpl.rec { background: linear-gradient(135deg, var(--panel2), color-mix(in srgb, var(--accent) 14%, var(--panel2))); }
+.fuerta-app .tpl-badge { justify-self: start; background: var(--accent); color: var(--accent-ink); border-radius: 999px;
+       padding: 1px 8px; font-size: 11px; font-weight: 700; }
+.fuerta-app .tpl small.muted { font-size: 12px; line-height: 1.35; }
+.fuerta-app .wk-save { margin-top: 12px; }
+.fuerta-app .wk-save input { flex: 1 1 220px; min-width: 0; }
 .fuerta-app .wday .chip.rest.on { background: #555; border-color: #555; color: var(--text); }
 @media (max-width: 560px) { .fuerta-app .wday { grid-template-columns: 1fr; } }
 

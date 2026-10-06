@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================= Objetos de superviviente ================= -->
+    <record id="item_view_list" model="ir.ui.view">
+        <field name="name">dbd.item.list</field>
+        <field name="model">dbd.item</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="rarity == 'common'" decoration-success="rarity == 'rare'"
+                  decoration-info="rarity == 'very_rare'" decoration-danger="rarity == 'ultra_rare'"
+                  decoration-warning="rarity in ('uncommon', 'event')">
+                <field name="image" widget="image" options="{'size': [32, 32]}"/>
+                <field name="name"/>
+                <field name="item_type"/>
+                <field name="rarity"/>
+                <field name="event" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="item_view_form" model="ir.ui.view">
+        <field name="name">dbd.item.form</field>
+        <field name="model">dbd.item</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title"><h1><field name="name" placeholder="Nombre del objeto"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="item_type"/>
+                            <field name="rarity"/>
+                        </group>
+                        <group>
+                            <field name="event"/>
+                            <field name="dbd_key" groups="base.group_no_one"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Efecto del objeto"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="item_view_search" model="ir.ui.view">
+        <field name="name">dbd.item.search</field>
+        <field name="model">dbd.item</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="no_event" string="Sin los de evento" domain="[('event', '=', False)]"/>
+                <separator/>
+                <filter name="archived" string="Archivados" domain="[('active', '=', False)]"/>
+                <filter name="by_type" string="Tipo" context="{'group_by': 'item_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_items" model="ir.actions.act_window">
+        <field name="name">Objetos de superviviente</field>
+        <field name="res_model">dbd.item</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_by_type': 1}</field>
+    </record>
+
+    <!-- ================= Builds ================= -->
+    <record id="build_view_list" model="ir.ui.view">
+        <field name="name">dbd.build.list</field>
+        <field name="model">dbd.build</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="role"/>
+                <field name="character_name"/>
+                <field name="perk_ids" widget="many2many_tags"/>
+                <field name="is_random" optional="show"/>
+                <field name="is_public" optional="show"/>
+                <field name="author_name" optional="show"/>
+                <field name="write_date" string="Modificada" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="build_view_form" model="ir.ui.view">
+        <field name="name">dbd.build.form</field>
+        <field name="model">dbd.build</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open_web" type="object" string="Abrir en el editor de la web" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" placeholder="Nombre de la build"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="role" widget="radio" options="{'horizontal': true}"/>
+                            <field name="survivor_id" invisible="role != 'survivor'" placeholder="Cualquiera"/>
+                            <field name="killer_id" invisible="role != 'killer'" placeholder="Cualquiera"/>
+                            <field name="offering_id" domain="[('role', 'in', (role, 'both'))]"/>
+                        </group>
+                        <group>
+                            <field name="item_id" invisible="role != 'survivor'"/>
+                            <field name="item_type" invisible="1"/>
+                            <field name="addon_ids" widget="many2many_tags" invisible="role == 'survivor' and not item_id"
+                                   domain="[('role', '=', role), ('item_type', '=', item_type), ('killer_id', '=', killer_id)]"
+                                   options="{'no_create': true}"/>
+                            <field name="is_public"/>
+                            <field name="is_random"/>
+                            <field name="author_name" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="perk_ids" domain="[('role', '=', role)]" options="{'no_create': true}">
+                        <list>
+                            <field name="image" widget="image" options="{'size': [32, 32]}"/>
+                            <field name="name"/>
+                            <field name="owner_name"/>
+                        </list>
+                    </field>
+                    <field name="note" placeholder="Notas: cuándo usarla, sinergias…"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="build_view_search" model="ir.ui.view">
+        <field name="name">dbd.build.search</field>
+        <field name="model">dbd.build</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="perk_ids"/>
+                <filter name="survivor" string="De superviviente" domain="[('role', '=', 'survivor')]"/>
+                <filter name="killer" string="De asesino" domain="[('role', '=', 'killer')]"/>
+                <separator/>
+                <filter name="random" string="Aleatorias" domain="[('is_random', '=', True)]"/>
+                <filter name="public" string="Públicas" domain="[('is_public', '=', True)]"/>
+                <filter name="mine" string="Mías" domain="[('user_id', '=', uid)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_builds" model="ir.actions.act_window">
+        <field name="name">Mis builds</field>
+        <field name="res_model">dbd.build</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_mine': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Aún no tienes builds</p>
+            <p>Créalas aquí o en la web con «Crear build», o saca una al azar con «Build aleatoria».</p>
+        </field>
+    </record>
+
+    <record id="action_web_builds" model="ir.actions.act_url">
+        <field name="name">Builds publicadas</field>
+        <field name="url">/dbd/builds</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="action_web_build" model="ir.actions.act_url">
+        <field name="name">Crear build</field>
+        <field name="url">/dbd/build</field>
+        <field name="target">self</field>
+    </record>
+
+    <record id="action_web_random" model="ir.actions.act_url">
+        <field name="name">Build aleatoria</field>
+        <field name="url">/dbd/aleatoria</field>
+        <field name="target">self</field>
+    </record>
+</odoo>

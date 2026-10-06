@@ -6,12 +6,12 @@ description: Cómo probar cambios de Mi rutina Fuerta (generador, calendario, pl
 # Probar fuertafit sin tocar los datos del usuario
 
 Lo general (bases de pruebas, tests, shell) está en la skill raíz `probar-modulo`. Aquí lo propio de este módulo.
-Datos reales: base `fuertafit`. El usuario **no quiere que se restauren ni recreen** datos que haya borrado.
+Datos reales: base `claude-main`. El usuario **no quiere que se restauren ni recreen** datos que haya borrado.
 
 ## 1. Copia de pruebas (desde la raíz, con `sg docker -c "..."`)
 
 ```bash
-docker compose exec -T odoo odoo db duplicate -n fuertafit fuertafit_test
+docker compose exec -T odoo odoo db duplicate -n claude-main fuertafit_test
 docker compose exec -T odoo odoo module upgrade -d fuertafit_test fuertafit
 # … pruebas …
 docker compose exec -T odoo odoo db drop fuertafit_test

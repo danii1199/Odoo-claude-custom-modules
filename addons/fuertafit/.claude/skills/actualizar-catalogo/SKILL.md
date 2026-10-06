@@ -43,6 +43,6 @@ Reglas: **nunca pidas ni teclees la contraseña**; el usuario inicia sesión él
      `postMessage` (hace falta un clic real: crea un botón temporal y púlsalo con `computer`), o
    - **Completo:** mismo mecanismo que el refresco (ventana `/fuerta/sync` + `postMessage`): con el catálogo vacío,
      `GET /fuerta/api/catalog/ids` devuelve [] y se envían todas. No hace falta descargar archivos.
-   El navegador debe tener sesión de Odoo en la base correcta (`fuertafit`, o `fuertafit_test` para probar).
+   El navegador debe tener sesión de Odoo en la base correcta (`claude-main`, o `fuertafit_test` para probar).
 9. Comprueba el resultado en la pestaña de la web: `fetch("/fuerta/api/meta")` (total y grupos), o en Odoo,
    menú Mi rutina Fuerta → Catálogo. Luego deja la pestaña como estaba.

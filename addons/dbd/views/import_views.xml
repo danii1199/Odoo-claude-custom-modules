@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="import_wizard_view_form" model="ir.ui.view">
+        <field name="name">dbd.import.wizard.form</field>
+        <field name="model">dbd.import.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>Trae personajes, perks, complementos, ofrendas y mapas de <b>dbd.tricky.lol</b> y las imágenes de la
+                   wiki de la comunidad. Actualiza lo que ya existe y añade lo nuevo; nunca borra nada.</p>
+                <group invisible="result">
+                    <field name="with_images"/>
+                    <field name="force_images" invisible="not with_images"/>
+                </group>
+                <field name="result" invisible="not result" class="text-success"/>
+                <footer>
+                    <button name="action_import" type="object" string="Actualizar ahora" class="btn-primary" invisible="result"/>
+                    <button special="cancel" string="Cerrar"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_import_wizard" model="ir.actions.act_window">
+        <field name="name">Actualizar catálogo</field>
+        <field name="res_model">dbd.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

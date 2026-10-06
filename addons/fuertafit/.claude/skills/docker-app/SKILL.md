@@ -10,7 +10,7 @@ desde `addons/fuertafit` (en `/mnt/extra-addons/fuertafit`) en el contenedor `od
 
 | Qué | Comando |
 |---|---|
-| Cambios en Python, XML, permisos o datos | `docker compose exec -T odoo odoo module upgrade -d fuertafit fuertafit && docker compose restart odoo` |
+| Cambios en Python, XML, permisos o datos | `docker compose exec -T odoo odoo module upgrade -d claude-main fuertafit && docker compose restart odoo` |
 | Solo estáticos (`static/web`) | nada: recarga el navegador (la versión `__V__` cambia sola) |
 | Comprobar | `curl -s -o /dev/null -w '%{http_code}\n' localhost:8000/fuerta` (303 = pide login: bien) |
 | Errores del módulo | `docker compose logs odoo --tail 80 \| grep -A15 -i "error\|traceback"` |
@@ -21,7 +21,7 @@ Solo si el usuario lo pide (escribe en `fuertafit`). Solo **lee** `rutinas`; si 
 en Odoo no duplica nada.
 
 ```bash
-sg docker -c "docker compose exec -T -e MIGRAR_LOGIN=admin odoo odoo shell -d fuertafit --no-http" \
+sg docker -c "docker compose exec -T -e MIGRAR_LOGIN=admin odoo odoo shell -d claude-main --no-http" \
     < addons/fuertafit/scripts/migrar_rutinas.py
 ```
 `RUTINAS_DATABASE_URL` llega al contenedor desde `docker-compose.yml` (contraseña `RUTINAS_PASSWORD` del `.env`).

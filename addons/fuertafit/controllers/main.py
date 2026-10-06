@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 
 from odoo import http
+from odoo.exceptions import UserError
 from odoo.http import request
 
 from ..services import calendar, catalog, coach, planner
@@ -42,6 +43,19 @@ class Req:
         return int(value) if value else default
 
 
+GROUP = "fuertafit.group_fuerta_user"
+
+
+def _allowed():
+    """Solo quien está en «Mi rutina Fuerta / Usuario» (security/groups.xml) usa la web y la API."""
+    return request.env.user.has_group(GROUP)
+
+
+def _forbidden():
+    return request.make_response("No tienes acceso a Mi rutina Fuerta.", status=403,
+                                 headers=[("Content-Type", "text/plain; charset=utf-8")])
+
+
 def _page(name):
     """Página HTML suelta de static/web (sin el layout del sitio web): solo /fuerta/sync, la ventanita del marcador."""
     html = (WEB_DIR / name).read_text(encoding="utf-8").replace("__V__", VERSION)
@@ -53,6 +67,8 @@ def _api(handler):
     web no puede mandarlo sin permiso del navegador (protección CSRF, ya que estas rutas no llevan token)."""
     hr = request.httprequest
     try:
+        if not _allowed():
+            raise HttpError(403, "No tienes acceso a Mi rutina Fuerta")
         body = {}
         if hr.method == "POST":
             if hr.mimetype != "application/json":
@@ -67,6 +83,9 @@ def _api(handler):
     except HttpError as e:
         request.env.cr.rollback()  # la respuesta normal confirmaría la transacción
         return request.make_json_response({"error": str(e)}, status=e.status)
+    except UserError as e:  # mensajes pensados para el usuario (p. ej. nombre repetido)
+        request.env.cr.rollback()
+        return request.make_json_response({"error": str(e)}, status=400)
     except (KeyError, ValueError, TypeError) as e:  # faltan campos o fechas mal formadas
         request.env.cr.rollback()
         return request.make_json_response({"error": f"Petición no válida: {e}"}, status=400)
@@ -84,10 +103,14 @@ class FuertaWeb(http.Controller):
     # ---------- páginas ----------
     @http.route("/fuerta", type="http", auth="user", methods=["GET"], website=True)
     def index(self, **kw):
+        if not _allowed():
+            return _forbidden()
         return request.render("fuertafit.app_page", {"v": VERSION})
 
     @get("/fuerta/sync")
     def sync(self, **kw):
+        if not _allowed():
+            return _forbidden()
         return _page("sync.html")
 
     # ---------- catálogo ----------
@@ -228,6 +251,26 @@ class FuertaWeb(http.Controller):
     @post("/fuerta/api/settings")
     def settings_save(self, **kw):
         return _api(lambda env, req: env["fuerta.settings"].save_settings(req.body))
+
+    # ---------- semanas tipo guardadas ----------
+    @get("/fuerta/api/weeks")
+    def weeks(self, **kw):
+        return _api(lambda env, req: env["fuerta.week.plan"].get_weeks())
+
+    @post("/fuerta/api/weeks")
+    def weeks_save(self, **kw):
+        def handler(env, req):
+            b = req.body
+            week_id = env["fuerta.week.plan"].save_week(b["name"], b["week"], b["minutes"], b.get("id"))
+            return {"id": week_id, "weeks": env["fuerta.week.plan"].get_weeks()}
+        return _api(handler)
+
+    @post("/fuerta/api/weeks/remove")
+    def weeks_remove(self, **kw):
+        def handler(env, req):
+            env["fuerta.week.plan"].delete_week(req.body["id"])
+            return env["fuerta.week.plan"].get_weeks()
+        return _api(handler)
 
     @post("/fuerta/api/bot/chat")
     def bot_chat(self, **kw):
