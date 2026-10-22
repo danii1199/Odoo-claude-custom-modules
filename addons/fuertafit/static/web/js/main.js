@@ -1,11 +1,11 @@
 /* Menú (rutas por #) y arranque de la web. Se carga el último. */
-const views = ["hoy", "calendario", "semana", "rutinas", "entrenador", "actualizar"];
+const views = ["hoy", "calendario", "semana", "rutinas", "entrenador", "actualizar", "sigilo"];
 function route() {
   const v = (location.hash.match(/#\/(\w+)/) || [])[1];
   const view = views.includes(v) && (v !== "entrenador" || META.bot) ? v : "hoy";
   views.forEach(x => $("view-" + x).hidden = x !== view);
-  document.querySelectorAll("#fuerta-app .fa-nav a").forEach(a => a.classList.toggle("on", a.dataset.view === view));
-  ({ hoy: Hoy.show, calendario: Cal.show, semana: Week.show, rutinas: Cat.show, entrenador: Bot.show, actualizar: Sync.show })[view]();
+  document.querySelectorAll("#fuerta-app .fa-nav a").forEach(a => a.classList.toggle("on", a.dataset.view === (view === "sigilo" ? "hoy" : view)));
+  ({ hoy: Hoy.show, calendario: Cal.show, semana: Week.show, rutinas: Cat.show, entrenador: Bot.show, actualizar: Sync.show, sigilo: Sigilo.show })[view]();
 }
 window.addEventListener("hashchange", route);
 

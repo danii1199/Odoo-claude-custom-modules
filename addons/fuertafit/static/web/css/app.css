@@ -160,3 +160,28 @@
   .fuerta-app .rl li { font-size: 0; gap: 0; } .fuerta-app .rl .dot { width: 7px; height: 7px; }
   .fuerta-app .msg { max-width: 95%; }
 }
+
+/* ---- Plan sigilo (rutina propia con temporizador mudo) ---- */
+.fuerta-app .sg-teaser { border-color: var(--accent); }
+.fuerta-app .sg-rules { margin: 0 0 12px; padding-left: 20px; color: var(--muted); font-size: 13px; }
+.fuerta-app .sg-timer { text-align: center; display: grid; gap: 6px; justify-items: center; transition: background .3s, border-color .3s; }
+.fuerta-app .sg-name { font-size: 22px; font-weight: 700; }
+.fuerta-app .sg-clock { font-size: 72px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; color: var(--accent); }
+.fuerta-app .sg-tip { max-width: 560px; }
+.fuerta-app .sg-progress { width: 100%; max-width: 560px; height: 6px; background: var(--panel2); border-radius: 3px; overflow: hidden; margin-top: 6px; }
+.fuerta-app .sg-progress div { height: 100%; background: var(--accent); transition: width .25s linear; }
+.fuerta-app .sg-ctrl { justify-content: center; margin-top: 6px; }
+.fuerta-app .sg-timer.rest { background: var(--panel2); }
+.fuerta-app .sg-timer.rest .sg-clock { color: var(--muted); }
+.fuerta-app .sg-timer.soon { border-color: var(--accent); animation: sg-blink .5s step-end infinite alternate; }
+.fuerta-app .sg-timer.end { border-color: var(--accent); background: var(--accent-soft); }
+@keyframes sg-blink { 50% { background: var(--accent-soft); } }
+.fuerta-app .sg-block h3 { font-size: 14px; margin: 14px 0 6px; color: var(--accent); text-transform: uppercase; letter-spacing: .04em; }
+.fuerta-app .sg-block h3 small { color: var(--muted); text-transform: none; letter-spacing: 0; font-weight: 400; }
+.fuerta-app .sg-block:first-child h3 { margin-top: 0; }
+.fuerta-app .sg-item { padding: 8px 10px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; }
+.fuerta-app .sg-item:hover { background: var(--panel2); }
+.fuerta-app .sg-item.on { border-color: var(--accent); background: var(--accent-soft); }
+.fuerta-app .sg-it { display: flex; justify-content: space-between; gap: 8px; }
+.fuerta-app .sg-it span { color: var(--muted); font-size: 13px; white-space: nowrap; }
+@media (max-width: 600px) { .fuerta-app .sg-clock { font-size: 56px; } }

@@ -39,6 +39,17 @@
                   <div class="view" id="view-hoy">
                     <section id="todayPlan"/>
 
+                    <section class="sg-teaser">
+                      <div class="spread" style="margin-bottom:0">
+                        <div>
+                          <h2>¿Sin tiempo hoy? Plan sigilo · 30 min</h2>
+                          <p class="muted" style="margin:0">Rutina propia (no es de FuertaFit): sombra de boxeo y fuerza sin saltos
+                            ni ruido, intensa de verdad, con un temporizador mudo.</p>
+                        </div>
+                        <button class="main" onclick="location.hash = '#/sigilo'">Ir al Plan sigilo</button>
+                      </div>
+                    </section>
+
                     <section>
                       <h2>Generar una rutina</h2>
                       <div class="fa-row" id="minutesRow"><label class="title">Tiempo disponible (min)</label></div>
@@ -64,6 +75,42 @@
                         </div>
                       </div>
                       <div class="blocks" id="blocks"/>
+                    </section>
+                  </div>
+
+                  <!-- ================= PLAN SIGILO (rutina propia, sin vídeos) ================= -->
+                  <div class="view" id="view-sigilo" hidden="">
+                    <section>
+                      <div class="spread">
+                        <h2>Plan sigilo · <span id="sgTotal"/></h2>
+                        <a href="#/hoy">‹ Volver a Hoy</a>
+                      </div>
+                      <p class="muted" style="margin-top:-6px">Para los días sin tiempo: 30 minutos intensos y en silencio,
+                        sin saltos ni golpes al suelo. El temporizador no suena; cambia de color y, si quieres, vibra.</p>
+                      <ul class="sg-rules" id="sgRules"/>
+                      <div class="fa-row" style="margin-bottom:0">
+                        <span class="chip" id="sgWeights">Tengo mancuernas</span>
+                        <span class="chip" id="sgVibrate">Vibrar al cambiar (móvil)</span>
+                      </div>
+                    </section>
+                    <section class="sg-timer" id="sgTimer">
+                      <div class="m" id="sgBlock"/>
+                      <div class="sg-name" id="sgName"/>
+                      <div class="sg-clock" id="sgClock"/>
+                      <div class="sg-tip" id="sgTip"/>
+                      <div class="m" id="sgNextName"/>
+                      <div class="sg-progress"><div id="sgBar"/></div>
+                      <div class="m" id="sgLeft"/>
+                      <div class="actions sg-ctrl">
+                        <button class="ghost" id="sgPrev">‹ Anterior</button>
+                        <button class="main" id="sgPlay">Empezar</button>
+                        <button class="ghost" id="sgNext">Siguiente ›</button>
+                        <button class="ghost" id="sgReset">Reiniciar</button>
+                      </div>
+                    </section>
+                    <section>
+                      <h2>La rutina</h2>
+                      <div id="sgList"/>
                     </section>
                   </div>
 
@@ -231,6 +278,7 @@
             <script t-attf-src="/fuertafit/static/web/js/actualizar.js?v={{v}}"/>
             <script t-attf-src="/fuertafit/static/web/js/rutinas.js?v={{v}}"/>
             <script t-attf-src="/fuertafit/static/web/js/entrenador.js?v={{v}}"/>
+            <script t-attf-src="/fuertafit/static/web/js/sigilo.js?v={{v}}"/>
             <script t-attf-src="/fuertafit/static/web/js/main.js?v={{v}}"/>
         </t>
     </template>
