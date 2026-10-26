@@ -10,15 +10,29 @@ Odoo 20 Community con mis módulos propios. Postgres y Odoo comunes en Docker; c
 | [`addons/menu_inicio`](addons/menu_inicio) | `menu_inicio` · pantalla de inicio con iconos de apps (estilo Enterprise) | instálalo en cada base |
 | [`addons/myspoty`](addons/myspoty) | `myspoty` · reproductor de Spotify | pendiente de portar a Odoo |
 
-## Arrancar
+## Instalar (en este PC o en otro)
 
-```bash
-cp .env.example .env                 # y rellena las contraseñas (solo la primera vez)
-docker network create proyectitos    # solo la primera vez
-docker compose up -d
-```
+`instalar.sh` lo hace **todo** en un Linux Mint / Ubuntu recién instalado: git, Docker y Compose, Claude Code, el
+repo en `~/proyectitos/claude-test`, `.env` con contraseñas al azar, Odoo y Postgres, y restaura las copias. Se puede
+repetir sin miedo: no sobrescribe `.env`, el repo ni una base que ya exista.
 
-Odoo: http://localhost:8000 (o `http://IP-de-este-PC:8000` desde la red local).
+### Llevarlo a otro PC
+
+1. En este PC: `./preparar-mudanza.sh` (o `./preparar-mudanza.sh claude-main claude-test` para varias bases).
+   Crea `../mudanza-<fecha>/` con la copia de las bases (base + adjuntos), el repo tal cual (historial de git y
+   cambios sin subir, sin `.env`), tus ajustes de Claude y el instalador. Cópiala a un USB: son **datos reales**,
+   no la subas a ningún sitio público.
+2. En el PC nuevo: `bash /ruta/al/usb/mudanza-<fecha>/instalar.sh` (pide la contraseña de sudo).
+3. Odoo en http://localhost:8000 con tu usuario de siempre. Claude: terminal nueva, `cd ~/proyectitos/claude-test && claude`
+   (la primera vez, iniciar sesión). La contraseña maestra del gestor de bases es nueva: `ODOO_MASTER_PASSWORD` en el `.env`.
+
+Sin carpeta de mudanza, `instalar.sh` clona el repo de GitHub; una copia suelta se restaura con
+`./instalar.sh ../copias-seguridad/<base>-<fecha>.zip [nombre-base]`.
+
+## Contraseñas (.env)
+
+`./ajustar-env.sh` muestra qué claves tienen valor; `./ajustar-env.sh ODOO_MASTER_PASSWORD --preguntar` la cambia
+(sin `--preguntar`, al azar). Las de Postgres se cambian también dentro de Postgres; no edites el `.env` a mano.
 
 ## Bases de datos
 
@@ -27,6 +41,7 @@ Odoo: http://localhost:8000 (o `http://IP-de-este-PC:8000` desde la red local).
 - Por consola: `docker compose exec odoo odoo db --help` y `docker compose exec odoo odoo module --help`.
 - Los datos viven en los volúmenes Docker `postgres-datos` y `odoo-datos`, **fuera del repo**.
   ⚠️ `docker compose down -v` los borra.
+- Copia de una base: `./copia-seguridad.sh [base]` (por defecto `claude-main`).
 - Copia de todo Postgres: `docker exec postgres pg_dumpall -U admin > ../copias-seguridad/todo.sql`
 
 ## Cambios de código

@@ -11,9 +11,13 @@ Postgres y Docker son **comunes** y viven en la raíz. Todo en español: código
 docker-compose.yml     servicios `postgres` (16) y `odoo` (20), proyecto Compose `proyectitos`
 Dockerfile             FROM odoo:20 + dependencias Python de los módulos (el código NO va en la imagen)
 odoo-entrypoint.sh     genera /etc/odoo/odoo.conf: odoo.conf + addons_path + admin_passwd, y lanza el entrypoint oficial
+instalar.sh            instala TODO en un Mint/Ubuntu vacío (apt: git, Docker; Claude Code; repo; .env al azar; up; copias .zip)
+preparar-mudanza.sh    ../mudanza-<fecha>/: copias de bases + repo en tar.gz (sin .env) + ajustes de Claude + instalar.sh
+ajustar-env.sh         cambia una clave del .env sin mostrarla (+ ALTER ROLE en Postgres y recrear contenedores)
+copia-seguridad.sh     copia de una base (por defecto claude-main) en ../copias-seguridad/<base>-<fecha>.zip
 odoo.conf              configuración de Odoo sin secretos (montada como /etc/odoo/odoo.base.conf)
 .env / .env.example    contraseñas (fuera de git): Postgres, rol `odoo`, contraseña maestra, ANTHROPIC_API_KEY opcional
-postgres/init/         script de la primera vez: roles `odoo` (CREATEDB) y `rutinas`, bases `fuertafit` y `rutinas`
+postgres/init/         script de la primera vez: roles `odoo` (CREATEDB) y `rutinas`, base `rutinas`
 addons/                extra-addons: cada carpeta es un módulo (nombre técnico = nombre de la carpeta)
   fuertafit/           módulo `fuertafit` (Mi rutina Fuerta, web en el sitio web de Odoo) + scripts/, CLAUDE.md, skills
   dbd/                 módulo `dbd` (enciclopedia de Dead by Daylight, web /dbd), separado de fuertafit
@@ -81,7 +85,7 @@ addons/                extra-addons: cada carpeta es un módulo (nombre técnico
 
 - **No tocar datos reales** (base `claude-main`) sin pedirlo: prueba en una copia (skill `probar-modulo`).
   Nunca borres, restaures ni sobrescribas una base de datos o volumen sin confirmación explícita.
-- No leer ni mostrar `.env`, contraseñas ni tokens. Para usar un valor: `grep '^X=' .env | cut -d= -f2-` dentro de un comando.
+- No leer ni mostrar `.env`, contraseñas ni tokens; para cambiarlos, skill `ajustar-env`. Para usar un valor: `grep '^X=' .env | cut -d= -f2-` dentro de un comando.
 - Nada de funciones que obliguen a pagar APIs (el usuario no quiere); preferir reglas deterministas.
 - Nuevo proyecto o módulo: skill `nuevo-modulo` (carpeta, montaje, CLAUDE.md y skills propias).
 - Sin node ni venv en el sistema: lo que haga falta, en contenedores (`node:20-alpine`, la propia imagen de Odoo).
