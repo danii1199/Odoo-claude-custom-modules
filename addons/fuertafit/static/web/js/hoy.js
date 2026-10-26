@@ -98,7 +98,7 @@ const Hoy = (() => {
     if (!all.length) {
       box.innerHTML = `<h2>Hoy · ${esc(fmtDay(t))}</h2>
         <p class="muted">No tienes nada planificado para hoy. Genera una rutina aquí abajo y guárdala,
-        o pídesela al <a href="#/entrenador">entrenador</a>.</p>`;
+        o haz el <a href="#/sigilo">Plan sigilo</a> (30 min en silencio).</p>`;
       return;
     }
     const mins = d.blocks.reduce((s, b) => s + b.durationMinutes, 0);

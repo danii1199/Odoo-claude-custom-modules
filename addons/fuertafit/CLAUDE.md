@@ -38,7 +38,7 @@ scripts/         migrar_rutinas.py (rutinas → Odoo; solo lee la base antigua; 
   esos ids o se pierden las ediciones). La app (`#fuerta-app`) la pinta el JS; no es editable.
 - CSS: todo prefijado con `.fuerta-app` para no romper Bootstrap del sitio. Clases que chocaban con Bootstrap
   renombradas: `.fa-row` (no `.row`), `.fa-head`, `.fa-nav`, `.fa-main` (el sitio ya tiene `header`, `nav`, `main`).
-- JS: scripts clásicos con ámbito global (`Hoy`, `Cal`, `Week`, `Cat`, `Bot`, `Sync`), cargados al final de la
+- JS: scripts clásicos con ámbito global (`Hoy`, `Cal`, `Week`, `Cat`, `Bot`, `Sync`, `Sigilo`), cargados al final de la
   plantilla con `?v=` (fecha del estático más nuevo). `common.js` primero, `main.js` (rutas `#/vista`) al final.
   Selectores siempre dentro de `#fuerta-app`. El `anchor_slide` del sitio no interfiere con `#/vista`.
 - Botón «⚙ Gestionar en Odoo» → `/odoo/action-fuertafit.action_plan` (backend).
@@ -71,9 +71,21 @@ Si añades algo a la web, añade su equivalente en el backend (y al revés).
 - Mis semanas (`fuerta.week.plan`, 2026-10-05): semanas tipo por días de entreno (`days_count`, calculado) y
   minutos (`minutes`). Las **recomendadas** (`recommended`, sin `user_id`, comunes y de solo lectura por ir.access)
   vienen de `data/week_recommended.xml` (3/4/5 días × 30/45/50/60 min, pautas ACSM/NSCA; generado con un script,
-  descripción en cada una). Las del usuario son suyas; duplicar una recomendada da una propia. Usar una = copiar su
+  descripción en cada una).
+  **2026-10-19: reorientadas a perder grasa** (fuerza + cardio, cardio tras torso, máx. 3 bloques de cardio/semana) y
+  **sin Cuerpo-Mente** (el usuario no lo quiere: solo calentamiento, con el ajuste `warmup`; `cooldown` en false).
+  Simuladas con `generator.generate` y los ajustes reales: todas cuadran al minuto. Se editaron a mano, no hay script. Las del usuario son suyas; duplicar una recomendada da una propia. Usar una = copiar su
   `week` y sus `minutes` a los ajustes (`week` y `dailyMinutes`). Ya no se crean semanas de ejemplo por usuario.
+- Duraciones: `durationMinutes` es la **nominal** de FuertaFit («2x10MIN»), no la del vídeo; el usuario prefiere
+  seguir con ella aunque algún día salga más largo (los vídeos a veces incluyen más que el entrenamiento). No corregir
+  duraciones a mano sin que lo pida (2026-10-19 se probó con «Entrenamiento 30 de enero», id 1691, y lo dejó en 20).
 - `semana.js`: `save()` sustituye `s`; los chips leen siempre `s.week[i]` al hacer clic (antes editaban el objeto viejo).
+- **Plan sigilo** (2026-10-21, `static/web/js/sigilo.js`, vista `#/sigilo` enlazada desde Hoy): rutina **propia**, no de
+  FuertaFit, para los días sin tiempo: 30:00 justos (calentamiento, 3 asaltos de sombra, fuerza 40/20 × 2 vueltas,
+  final a tope, bajar pulsaciones), **en silencio** (el usuario tiene vecinos: cero saltos e impactos; nada de escaladores ni zancadas con paso, los pies no caen al suelo). Temporizador mudo: color, parpadeo
+  y vibración opcional; versión con mancuernas (`alt`). Todo en el JS (`PLAN`), sin modelo ni backend: es contenido
+  fijo, no datos del usuario, y no se apunta en el historial (este va por rutinas de FuertaFit). Si cambias pasos,
+  que el total siga en 1800 s.
 - `services/coach.py`: entrenador con Claude API, **latente** (solo con `ANTHROPIC_API_KEY` y el SDK). El usuario no
   quiere pagar API: no lo actives ni lo sugieras.
 
