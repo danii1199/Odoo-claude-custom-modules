@@ -21,7 +21,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U admin"]
       interval: 5s
       retries: 10
-    restart: "no"
+    restart: unless-stopped
     networks: [proyectitos]
 
   odoo:
@@ -45,7 +45,7 @@ services:
       - ./odoo.conf:/etc/odoo/odoo.base.conf:ro
       # Todos los módulos de una vez: cada addons/<modulo> con __manifest__.py se carga solo.
       - ./addons:/mnt/extra-addons:ro
-    restart: "no"
+    restart: unless-stopped
     networks: [proyectitos]
 
 volumes:

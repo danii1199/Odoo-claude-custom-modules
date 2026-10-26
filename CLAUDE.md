@@ -39,6 +39,9 @@ addons/                extra-addons: cada carpeta es un módulo (nombre técnico
   Compose avisa de que los volúmenes "were created for project postgres/fuertafit": es normal, se crearon antes de
   unificar (2026-10-05). **No** pongas `external: true` ni los borres.
 - Odoo en `http://IP-de-este-PC:8000` (toda la red local, decisión del usuario). Postgres solo en `127.0.0.1:5432`.
+  Desde otros equipos, por Tailscale con HTTPS (`sudo tailscale serve --bg 8000`, `proxy_mode = True`): sin HTTPS,
+  fuera de `localhost`, el backend de Odoo 20 se queda en blanco (contexto no seguro).
+- `restart: unless-stopped`: Postgres y Odoo arrancan solos al encender el PC (salvo que se paren a mano).
 - Si se recrea la carpeta `addons/` (reestructurar, clonar de nuevo…), el contenedor sigue viendo la antigua
   (`/mnt/extra-addons` vacío): `restart odoo`.
 - Cambiar código Python o XML de un módulo: `restart` + actualizar el módulo en su base de datos (no hace falta `--build`).
