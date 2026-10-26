@@ -2,10 +2,11 @@
 const views = ["hoy", "calendario", "semana", "rutinas", "entrenador", "actualizar", "sigilo"];
 function route() {
   const v = (location.hash.match(/#\/(\w+)/) || [])[1];
-  const view = views.includes(v) && (v !== "entrenador" || META.bot) ? v : "hoy";
-  views.forEach(x => $("view-" + x).hidden = x !== view);
+  // Sigilo solo existe si la base tiene la plantilla nueva (sigilo.js); si no, se queda en Hoy en vez de romper la app.
+  const view = views.includes(v) && (v !== "entrenador" || META.bot) && (v !== "sigilo" || typeof Sigilo !== "undefined") ? v : "hoy";
+  views.forEach(x => { if ($("view-" + x)) $("view-" + x).hidden = x !== view; });
   document.querySelectorAll("#fuerta-app .fa-nav a").forEach(a => a.classList.toggle("on", a.dataset.view === (view === "sigilo" ? "hoy" : view)));
-  ({ hoy: Hoy.show, calendario: Cal.show, semana: Week.show, rutinas: Cat.show, entrenador: Bot.show, actualizar: Sync.show, sigilo: Sigilo.show })[view]();
+  ({ hoy: Hoy.show, calendario: Cal.show, semana: Week.show, rutinas: Cat.show, entrenador: Bot.show, actualizar: Sync.show, sigilo: () => Sigilo.show() })[view]();
 }
 window.addEventListener("hashchange", route);
 
