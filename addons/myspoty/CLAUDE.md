@@ -30,8 +30,8 @@ addons/myspoty/
 
 - Sesiones: las da Odoo (login de Odoo) → desaparecen `users`/`sessions`/cookie `myspoty_sid` y el código de 6
   letras para otros dispositivos. Cada usuario de Odoo conecta **su** Spotify (PKCE) una vez.
-- Redirect URI de Spotify: Spotify no acepta `localhost`; con Odoo en el puerto 8000 será
-  `http://127.0.0.1:8000/myspoty/callback` (hay que añadirla en el panel de Spotify). Fuera de este PC hace falta https.
+- Redirect URI de Spotify: Spotify no acepta `localhost`; con Odoo en el puerto 8069 será
+  `http://127.0.0.1:8069/myspoty/callback` (hay que añadirla en el panel de Spotify). Fuera de este PC hace falta https.
 - `SPOTIFY_CLIENT_ID` (sin secreto, PKCE) irá en el `.env` raíz + `environment:` del servicio `odoo`, o en un
   `ir.config_parameter` editable desde Ajustes.
 

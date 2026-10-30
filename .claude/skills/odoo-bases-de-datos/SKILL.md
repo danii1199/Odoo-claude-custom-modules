@@ -7,25 +7,25 @@ description: Gestionar las bases de datos del Odoo común - listar, crear, dupli
 
 Dos caminos, ambos gestionan base + filestore (adjuntos en el volumen `odoo-datos`):
 
-- **Web**: `http://localhost:8000/web/database/manager` con la contraseña maestra (`ODOO_MASTER_PASSWORD` en `.env`;
+- **Web**: `http://localhost:8069/web/database/manager` con la contraseña maestra (`ODOO_MASTER_PASSWORD` en `~/servicios/.env`;
   dísela al usuario solo si la pide y sin copiarla en ningún archivo).
-- **CLI** (preferido para ti): `sg docker -c "docker compose exec -T odoo odoo db <orden> ..."` desde la raíz.
+- **CLI** (preferido para ti): `sg docker -c "docker exec -i odoo odoo db <orden> ..."` (desde cualquier carpeta).
 
 | Qué | Orden |
 |---|---|
 | Listar | `docker exec postgres psql -U admin -Atc "select datname from pg_database where datdba = 'odoo'::regrole"` |
 | Crear vacía | `odoo db init <bd> --language es_ES --country ES` (usuario admin/admin por defecto: `--password`) y luego `odoo module install -d <bd> <modulo>` |
 | Duplicar | `odoo db duplicate <origen> <destino>` (`-n` neutraliza: sin crons ni correos; ideal para pruebas) |
-| Copia de seguridad | `odoo db dump <bd> /tmp/<bd>.zip` y `docker compose cp odoo:/tmp/<bd>.zip ../copias-seguridad/` |
-| Restaurar | `docker compose cp <archivo>.zip odoo:/tmp/` y `odoo db load <bd-nueva> /tmp/<archivo>.zip` |
+| Copia de seguridad | `odoo db dump <bd> /tmp/<bd>.zip` y `docker cp odoo:/tmp/<bd>.zip ~/proyectitos/copias-seguridad/` |
+| Restaurar | `docker cp <archivo>.zip odoo:/tmp/` y `odoo db load <bd-nueva> /tmp/<archivo>.zip` |
 | Renombrar | `odoo db rename <vieja> <nueva>` |
 | Borrar | `odoo db drop <bd>` |
 
-- Copias en `../copias-seguridad/` (fuera del repo) con fecha en el nombre: `fuertafit-2026-10-05.zip`.
+- Copias en `~/proyectitos/copias-seguridad/` (fuera del repo) con fecha en el nombre: `fuertafit-2026-10-05.zip`.
   Borra luego el `.zip` de `/tmp` del contenedor.
 - El rol `odoo` tiene `CREATEDB`: es el dueño de todas las bases de Odoo. El superusuario de Postgres es `admin`
   (`docker exec postgres psql -U admin -d <bd>`), útil para consultas de solo lectura.
-- Postgres completo (todas las bases): `sg docker -c "docker exec postgres pg_dumpall -U admin" > ../copias-seguridad/todo-<fecha>.sql`.
+- Postgres completo (todas las bases): `sg docker -c "docker exec postgres pg_dumpall -U admin" > ~/proyectitos/copias-seguridad/todo-<fecha>.sql`.
 
 ## Normas
 

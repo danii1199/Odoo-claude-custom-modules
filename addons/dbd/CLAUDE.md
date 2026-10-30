@@ -7,7 +7,7 @@ son comunes (`../../CLAUDE.md`, skills `odoo-docker`, `odoo-bases-de-datos`, `pr
 
 Decisión del usuario (2026-10-05): portal **separado de fuertafit** (su propia base de datos y sitio web, portada
 `/dbd`). El catálogo completo está en `claude-main` (la real, importado el 2026-10-05; copia previa en
-`../copias-seguridad/claude-main-2026-10-05-antes-dbd.zip`) y en la base de pruebas `claude-test`.
+`~/proyectitos/copias-seguridad/claude-main-2026-10-05-antes-dbd.zip`) y en la base de pruebas `claude-test`.
 
 ## Estructura
 
@@ -67,8 +67,8 @@ static/src/   css/dbd.css (bajo .dbd-app y #wrapwrap.dbd-page; .dbd-picker y .db
 ## Actualizar (desde la raíz del repo)
 
 ```bash
-sg docker -c "docker compose exec -T odoo odoo module upgrade -d claude-main dbd && docker compose restart odoo"
-sg docker -c "docker compose exec -T odoo odoo shell -d claude-main --no-http < addons/dbd/scripts/actualizar_catalogo.py"
+sg docker -c "docker exec -i odoo odoo module upgrade -d claude-main dbd && docker restart odoo"
+sg docker -c "docker exec -i odoo odoo shell -d claude-main --no-http < addons/dbd/scripts/actualizar_catalogo.py"
 ```
 Solo CSS/JS: recargar el navegador (el `?v=` cambia al reiniciar Odoo).
 

@@ -11,10 +11,10 @@ con `sg docker -c "..."`.
 ## Base de pruebas
 
 ```bash
-docker compose exec -T odoo odoo db init myspoty_test --language es_ES --country ES
-docker compose exec -T odoo odoo module install -d myspoty_test myspoty
-# tras cada cambio: odoo module upgrade -d myspoty_test myspoty && docker compose restart odoo
-docker compose exec -T odoo odoo db drop myspoty_test        # al terminar
+docker exec -i odoo odoo db init myspoty_test --language es_ES --country ES
+docker exec -i odoo odoo module install -d myspoty_test myspoty
+# tras cada cambio: odoo module upgrade -d myspoty_test myspoty && docker restart odoo
+docker exec -i odoo odoo db drop myspoty_test        # al terminar
 ```
 Si copias una base que ya tenga tokens reales, usa `odoo db duplicate -n` (neutraliza: crons parados). **Nunca**
 dejes el cron de sync activo en una base de pruebas con tokens reales: renueva el permiso y gasta rate limit.

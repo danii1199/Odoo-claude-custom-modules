@@ -14,4 +14,4 @@ Enciclopedia de Dead by Daylight en Odoo: supervivientes, asesinos, perks, compl
   de [dbd.tricky.lol](https://dbd.tricky.lol) (datos) y de la [wiki oficial](https://deadbydaylight.wiki.gg)
   (imágenes). Gratis, sin claves; actualiza sin borrar nada. Úsalo cuando salga un capítulo nuevo.
 
-Separado de `fuertafit`: está en la base `claude-test` → `http://IP-de-este-PC:8000/web/login?db=claude-test`.
+Separado de `fuertafit`: está en la base `claude-test` → `http://IP-de-este-PC:8069/web/login?db=claude-test`.

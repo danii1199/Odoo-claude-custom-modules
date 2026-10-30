@@ -11,23 +11,23 @@ añaden lo específico de cada módulo.
 ## 1. Base de pruebas
 
 ```bash
-docker compose exec -T odoo odoo db duplicate -n claude-main fuertafit_test   # copia neutralizada (sin crons ni correos)
-docker compose exec -T odoo odoo module upgrade -d fuertafit_test <modulo>  # aplica tu código a la copia
+docker exec -i odoo odoo db duplicate -n claude-main fuertafit_test   # copia neutralizada (sin crons ni correos)
+docker exec -i odoo odoo module upgrade -d fuertafit_test <modulo>  # aplica tu código a la copia
 # … pruebas …
-docker compose exec -T odoo odoo db drop fuertafit_test
+docker exec -i odoo odoo db drop fuertafit_test
 ```
 Para un módulo nuevo sin datos: `odoo db init <modulo>_test` + `odoo module install -d <modulo>_test <modulo>`.
 
 ## 2. Tests de Odoo (`tests/` del módulo)
 
 ```bash
-docker compose exec -T odoo odoo -d <modulo>_test -i <modulo> --test-enable --test-tags /<modulo> --stop-after-init
+docker exec -i odoo odoo -d <modulo>_test -i <modulo> --test-enable --test-tags /<modulo> --stop-after-init
 ```
 Revisa `ERROR`/`FAIL` en la salida (`| grep -E "ERROR|FAIL|tests"`). Nunca lances tests contra `fuertafit`.
 
 ## 3. Scripts en el shell de Odoo
 
-`docker compose exec -T odoo odoo shell -d <bd>_test --no-http < <scratchpad>/t.py`. En el script está `env`;
+`docker exec -i odoo odoo shell -d <bd>_test --no-http < <scratchpad>/t.py`. En el script está `env`;
 para guardar, `env.cr.commit()` (sin él se descarta todo al salir: útil para pruebas de solo lectura).
 
 ## 4. HTTP y navegador

@@ -58,8 +58,8 @@ const Bot = (() => {
     if (!META.bot) {
       $("botOff").hidden = false;
       $("botOff").innerHTML = `El entrenador con IA está desactivado: falta la API key de Anthropic.
-        Crea un archivo <code>.env</code> junto a <code>docker-compose.yml</code> con <code>ANTHROPIC_API_KEY=…</code>
-        y reinicia con <code>docker compose up -d</code>.`;
+        Pon <code>ANTHROPIC_API_KEY=…</code> en <code>~/servicios/.env</code>
+        y recrea Odoo con <code>~/servicios/servicios.sh recrear odoo</code>.`;
     }
     SUGGESTIONS.forEach(s => $("suggestions").appendChild(chip(esc(s), false, () => { $("prompt").value = s; $("prompt").focus(); })));
     $("sendBtn").onclick = send;

@@ -25,12 +25,12 @@ addons/<modulo>/          nombre técnico = nombre de la carpeta (snake_case)
    `user_ids` = `base.user_admin` (Dani). Cárgalo antes de `ir.access.csv` y úsalo en permisos, menú raíz y web
    (ver `addons/fuertafit/security/groups.xml`). Nada visible para `base.group_user` en general.
 3. Manifest: `"version": "20.0.1.0.0"`, `"author": "danii1199"`, `"license": "LGPL-3"`, `"depends": ["base", ...]`.
-4. No hay que tocar `docker-compose.yml`: `addons/` entero está montado. Tras crear el módulo,
-   `sg docker -c "docker compose restart odoo"` para que Odoo lo vea (`odoo module list` o Aplicaciones → Actualizar lista).
+4. No hay que tocar `~/servicios/odoo/compose.yml`: `addons/` entero está montado. Tras crear el módulo,
+   `sg docker -c "docker restart odoo"` para que Odoo lo vea (`odoo module list` o Aplicaciones → Actualizar lista).
 5. Dependencias Python: línea `RUN pip install ...` en el `Dockerfile` indicando el módulo, y `up -d --build`.
    Secretos/variables: en `.env` + `.env.example` + `environment:` del servicio `odoo` (solo lo que necesite).
 6. Instala en una base de pruebas primero (skill `probar-modulo`), y en la real solo cuando el usuario lo diga:
-   `docker compose exec -T odoo odoo module install -d <bd> <modulo>` + `restart odoo`.
+   `docker exec -i odoo odoo module install -d <bd> <modulo>` + `restart odoo`.
 7. Escribe `addons/<modulo>/CLAUDE.md` y sus skills (mínimo `probar-cambios`), y añade el proyecto a la estructura del
    `CLAUDE.md` raíz y al `README.md`.
 

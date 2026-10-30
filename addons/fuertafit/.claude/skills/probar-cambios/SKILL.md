@@ -11,17 +11,17 @@ Datos reales: base `claude-main`. El usuario **no quiere que se restauren ni rec
 ## 1. Copia de pruebas (desde la raíz, con `sg docker -c "..."`)
 
 ```bash
-docker compose exec -T odoo odoo db duplicate -n claude-main fuertafit_test
-docker compose exec -T odoo odoo module upgrade -d fuertafit_test fuertafit
+docker exec -i odoo odoo db duplicate -n claude-main fuertafit_test
+docker exec -i odoo odoo module upgrade -d fuertafit_test fuertafit
 # … pruebas …
-docker compose exec -T odoo odoo db drop fuertafit_test
+docker exec -i odoo odoo db drop fuertafit_test
 ```
 `-n` neutraliza la copia: el cron de plan automático no corre en ella.
 
 ## 2. Lógica de Python: `odoo shell`
 
 ```bash
-docker compose exec -T odoo odoo shell -d fuertafit_test --no-http < <scratchpad>/t.py
+docker exec -i odoo odoo shell -d fuertafit_test --no-http < <scratchpad>/t.py
 ```
 En `t.py`: `from odoo.addons.fuertafit.services import generator, planner, calendar, catalog`.
 Para actuar como un usuario: `uenv = env(user=env.ref("base.user_admin").id)`. Si el catálogo está vacío, mete
@@ -30,7 +30,7 @@ Sin `env.cr.commit()` nada se guarda.
 
 ## 3. En la web
 
-- Entra en la copia: `http://localhost:8000/web/login?db=fuertafit_test` y luego `/fuerta`.
+- Entra en la copia: `http://localhost:8069/web/login?db=fuertafit_test` y luego `/fuerta`.
 - Si no hay más remedio que probar en `fuertafit` (con permiso): fechas de un mes futuro sin planificar
   (mira antes `GET /fuerta/api/plans?from=...&to=...` y **anota lo que existe**) y al terminar borra solo lo tuyo con
   `POST /fuerta/api/plan/remove {"day": ...}` y `POST /fuerta/api/day/clear {"start": ..., "end": ...}`.

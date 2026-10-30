@@ -92,9 +92,9 @@ Si añades algo a la web, añade su equivalente en el backend (y al revés).
 ## Ejecutar y actualizar (desde la raíz del repo)
 
 ```bash
-sg docker -c "docker compose exec -T odoo odoo module upgrade -d <bd> fuertafit && docker compose restart odoo"
+sg docker -c "docker exec -i odoo odoo module upgrade -d <bd> fuertafit && docker restart odoo"
 ```
-Solo estáticos: recargar el navegador. Web: `http://IP-de-este-PC:8000/fuerta`.
+Solo estáticos: recargar el navegador. Web: `http://IP-de-este-PC:8069/fuerta`.
 
 ## Normas
 

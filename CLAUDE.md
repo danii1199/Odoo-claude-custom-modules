@@ -3,21 +3,14 @@
 Un **Odoo 20 Community** común donde el usuario va añadiendo sus propios módulos. Cada proyecto es una carpeta de
 `addons/` (los extra-addons) que **es el propio módulo** (`__manifest__.py`, `models/`… directamente dentro), su propia memoria (`addons/<proyecto>/CLAUDE.md`) y sus propias
 skills (`addons/<proyecto>/.claude/skills`).
-Postgres y Docker son **comunes** y viven en la raíz. Todo en español: código, comentarios, interfaz y documentación.
+Postgres y Odoo son **comunes**; sus compose viven fuera del repo, en `~/servicios/` (solo en este PC). Todo en español: código, comentarios, interfaz y documentación.
 
 ## Estructura
 
 ```
-docker-compose.yml     servicios `postgres` (16) y `odoo` (20), proyecto Compose `proyectitos`
 Dockerfile             FROM odoo:20 + dependencias Python de los módulos (el código NO va en la imagen)
 odoo-entrypoint.sh     genera /etc/odoo/odoo.conf: odoo.conf + addons_path + admin_passwd, y lanza el entrypoint oficial
-instalar.sh            instala TODO en un Mint/Ubuntu vacío (apt: git, Docker; Claude Code; repo; .env al azar; up; copias .zip)
-preparar-mudanza.sh    ../mudanza-<fecha>/: copias de bases + repo en tar.gz (sin .env) + ajustes de Claude + instalar.sh
-ajustar-env.sh         cambia una clave del .env sin mostrarla (+ ALTER ROLE en Postgres y recrear contenedores)
-copia-seguridad.sh     copia de una base (por defecto claude-main) en ../copias-seguridad/<base>-<fecha>.zip
 odoo.conf              configuración de Odoo sin secretos (montada como /etc/odoo/odoo.base.conf)
-.env / .env.example    contraseñas (fuera de git): Postgres, rol `odoo`, contraseña maestra, ANTHROPIC_API_KEY opcional
-postgres/init/         script de la primera vez: roles `odoo` (CREATEDB) y `rutinas`, base `rutinas`
 addons/                extra-addons: cada carpeta es un módulo (nombre técnico = nombre de la carpeta)
   fuertafit/           módulo `fuertafit` (Mi rutina Fuerta, web en el sitio web de Odoo) + scripts/, CLAUDE.md, skills
   dbd/                 módulo `dbd` (enciclopedia de Dead by Daylight, web /dbd), separado de fuertafit
@@ -25,34 +18,54 @@ addons/                extra-addons: cada carpeta es un módulo (nombre técnico
   myspoty/             futuro módulo `myspoty` (aún sin manifest; app antigua en app/), CLAUDE.md y skills
 ```
 
+Fuera del repo, **sin git** (decisión del usuario), en `~/servicios/`: la infraestructura Docker de este PC.
+
+```
+servicios.sh           centralizador: estado / up / down / restart / recrear / build / pull / logs (todos o los indicados)
+.env / .env.example    contraseñas: Postgres, rol `odoo`, contraseña maestra, ANTHROPIC_API_KEY opcional (enlazado en postgres/ y odoo/)
+postgres/              compose propio (proyecto `postgres`) + init/ (primera vez: roles `odoo` CREATEDB y `rutinas`, base `rutinas`)
+odoo/                  compose propio (proyecto `odoo`): build desde este repo, monta odoo.conf y addons/ (ODOO_REPO para otra ruta)
+vaultwarden/           compose propio (proyecto `vaultwarden`, puerto 8080) + vw-data/ (de root: la bóveda cifrada)
+instalar.sh            instala TODO en un Mint/Ubuntu vacío (apt, Docker, Claude Code, repo, servicios, .env al azar, copias .zip)
+preparar-mudanza.sh    ~/proyectitos/mudanza-<fecha>/: copias + repo y servicios en tar.gz (sin .env ni vw-data) + instalar.sh
+ajustar-env.sh         cambia una clave del .env sin mostrarla (+ ALTER ROLE en Postgres y recrear postgres y odoo)
+copia-seguridad.sh     copia de una base (por defecto claude-main) en ~/proyectitos/copias-seguridad/<base>-<fecha>.zip
+```
+
 - `addons/` se monta **en solo lectura** en `/mnt/extra-addons`. `odoo-entrypoint.sh` mete en `addons_path` cada
-  `addons_path` `/mnt/extra-addons` en cuanto hay algún módulo: uno nuevo no necesita tocar `docker-compose.yml`, y una
+  `addons_path` `/mnt/extra-addons` en cuanto hay algún módulo: uno nuevo no necesita tocar el compose, y una
   carpeta sin `__manifest__.py` (como `myspoty` ahora) simplemente se ignora.
 - Dentro del módulo pueden ir `scripts/`, `CLAUDE.md`, `.claude/`…: Odoo solo carga lo que importa el manifest.
 - Al trabajar en un proyecto, lee su `CLAUDE.md` y usa sus skills (se cargan solas al tocar archivos de esa carpeta).
 
 ## Docker (skill `odoo-docker`)
 
-- Siempre `sg docker -c "..."` (la sesión puede no tener aún el grupo `docker`) y desde la raíz del repo.
-- Contenedores `postgres` y `odoo`; red externa `proyectitos`; volúmenes `postgres-datos` (bases de datos) y
-  `odoo-datos` (filestore y sesiones). Están **fuera del repo**: clonar o limpiar no los toca.
-  Compose avisa de que los volúmenes "were created for project postgres/fuertafit": es normal, se crearon antes de
-  unificar (2026-10-05). **No** pongas `external: true` ni los borres.
-- Odoo en `http://IP-de-este-PC:8000` (toda la red local, decisión del usuario). Postgres solo en `127.0.0.1:5432`.
-  Desde otros equipos, por Tailscale con HTTPS (`sudo tailscale serve --bg 8000`, `proxy_mode = True`): sin HTTPS,
+- Siempre `sg docker -c "..."` (la sesión puede no tener aún el grupo `docker`). `docker exec odoo …`,
+  `docker restart odoo`, `docker logs odoo` van por nombre de contenedor y valen desde cualquier carpeta; arrancar,
+  parar, recrear o reconstruir, con `~/servicios/servicios.sh` (un proyecto Compose por carpeta, independientes).
+- Contenedores `postgres`, `odoo` y `vaultwarden`. Odoo **no** depende de Postgres en Compose: lo busca por la red
+  externa `proyectitos` (`db_host = postgres`). Volúmenes `postgres-datos` (bases de datos) y `odoo-datos`
+  (filestore y sesiones), con nombre fijo: no dependen de ninguna carpeta. Compose avisa de que "were created for
+  project proyectitos": es normal, se crearon antes de separar los proyectos (2026-10-30). **No** pongas
+  `external: true` ni los borres.
+- Odoo en `http://IP-de-este-PC:8069` (toda la red local, decisión del usuario). Postgres solo en `127.0.0.1:5432`.
+  Vaultwarden solo por Tailscale: `https://<este-pc>.<red>.ts.net:8443` (`sudo tailscale serve --bg --https=8443 8080`);
+  su 8080 escucha solo en `127.0.0.1` (decisión del usuario: nada de HTTP en la red local).
+  Desde otros equipos, Odoo por Tailscale con HTTPS (`sudo tailscale serve --bg 8069`, `proxy_mode = True`): sin HTTPS,
   fuera de `localhost`, el backend de Odoo 20 se queda en blanco (contexto no seguro).
-- `restart: unless-stopped`: Postgres y Odoo arrancan solos al encender el PC (salvo que se paren a mano).
+- `restart: unless-stopped` (Vaultwarden `always`): Postgres y Odoo arrancan solos al encender el PC (salvo que se paren a mano).
 - Si se recrea la carpeta `addons/` (reestructurar, clonar de nuevo…), el contenedor sigue viendo la antigua
-  (`/mnt/extra-addons` vacío): `restart odoo`.
+  (`/mnt/extra-addons` vacío): `docker restart odoo`.
 - Cambiar código Python o XML de un módulo: `restart` + actualizar el módulo en su base de datos (no hace falta `--build`).
-  `--build` si cambian `Dockerfile` u `odoo-entrypoint.sh` (van dentro de la imagen). Cambiar `.env`: `up -d --force-recreate`.
+  `servicios.sh build odoo` si cambian `Dockerfile` u `odoo-entrypoint.sh` (van dentro de la imagen). Cambiar
+  `~/servicios/.env` o un compose: `servicios.sh recrear <servicio>`.
 
 ## Bases de datos (skill `odoo-bases-de-datos`)
 
 - Multi-base: `list_db = True`, selector en `/web/login` y gestor en `/web/database/manager`, protegido por la
-  contraseña maestra (`ODOO_MASTER_PASSWORD` en `.env`; **no la muestres**). Odoo solo lista las bases cuyo dueño es `odoo`.
+  contraseña maestra (`ODOO_MASTER_PASSWORD` en `~/servicios/.env`; **no la muestres**). Odoo solo lista las bases cuyo dueño es `odoo`.
 - Por consola: `odoo db {init,duplicate,dump,load,rename,drop}` y `odoo module {install,upgrade,uninstall,list}`
-  dentro del contenedor (`docker compose exec -T odoo odoo ...`). Gestionan también el filestore.
+  dentro del contenedor (`docker exec -i odoo odoo ...`). Gestionan también el filestore.
 - Bases actuales (2026-10-05): `claude-main` (la principal, con fuertafit, menu_inicio y dbd con el catálogo completo: **datos reales**),
   `claude-test` (pruebas del usuario: fuertafit, menu_inicio y dbd con el catálogo completo) y `rutinas` (web
   antigua de fuertafit, solo para migrar). La base `fuertafit` ya no existe. La de la app antigua de myspoty ya no
@@ -82,13 +95,13 @@ addons/                extra-addons: cada carpeta es un módulo (nombre técnico
 - Vistas `<list>` (no `<tree>`), `invisible="expr"` (no `attrs`). `ir.config_parameter`: `get_str`/`set_str`.
 - Tareas periódicas con `ir.cron` en `data/` (`max_cron_threads = 1`). Fechas de "hoy" en `Europe/Madrid` (TZ del contenedor).
 - Ante la duda sobre una API de Odoo 20, mira el código real del contenedor:
-  `docker compose exec -T odoo grep -rn ... /usr/lib/python3/dist-packages/odoo` en vez de suponer por versiones anteriores.
+  `docker exec -i odoo grep -rn ... /usr/lib/python3/dist-packages/odoo` en vez de suponer por versiones anteriores.
 
 ## Normas
 
 - **No tocar datos reales** (base `claude-main`) sin pedirlo: prueba en una copia (skill `probar-modulo`).
   Nunca borres, restaures ni sobrescribas una base de datos o volumen sin confirmación explícita.
-- No leer ni mostrar `.env`, contraseñas ni tokens; para cambiarlos, skill `ajustar-env`. Para usar un valor: `grep '^X=' .env | cut -d= -f2-` dentro de un comando.
+- No leer ni mostrar `.env`, contraseñas ni tokens; para cambiarlos, skill `ajustar-env`. Para usar un valor: `grep '^X=' ~/servicios/.env | cut -d= -f2-` dentro de un comando.
 - Nada de funciones que obliguen a pagar APIs (el usuario no quiere); preferir reglas deterministas.
 - Nuevo proyecto o módulo: skill `nuevo-modulo` (carpeta, montaje, CLAUDE.md y skills propias).
 - Sin node ni venv en el sistema: lo que haga falta, en contenedores (`node:20-alpine`, la propia imagen de Odoo).

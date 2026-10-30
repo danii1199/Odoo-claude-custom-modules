@@ -2,7 +2,7 @@
 
 Se ejecuta dentro del contenedor con el shell de Odoo, desde la raíz del repo:
 
-    sg docker -c "docker compose exec -T -e MIGRAR_LOGIN=admin odoo odoo shell -d fuertafit --no-http" \
+    sg docker -c "docker exec -i -e MIGRAR_LOGIN=admin odoo odoo shell -d fuertafit --no-http" \
         < addons/fuertafit/scripts/migrar_rutinas.py
 
 - Catálogo: se añade/actualiza (común a todos los usuarios).

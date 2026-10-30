@@ -12,7 +12,7 @@ Spotify y estadísticas propias. Necesita **Spotify Premium** para reproducir.
 1. En https://developer.spotify.com/dashboard crea una app con la Redirect URI
    `http://127.0.0.1:8001/callback` y marca *Web API* y *Web Playback SDK*.
 2. Pega el **Client ID** en `.env` detrás de `SPOTIFY_CLIENT_ID=` (no hace falta el client secret).
-3. `docker compose up -d --build` (si luego cambias `.env`: `docker compose up -d --force-recreate`; `restart` no lo relee)
+3. `~/servicios/servicios.sh build odoo` (si luego cambias `.env`: `~/servicios/servicios.sh recrear odoo`; `restart` no lo relee)
 4. Abre **http://127.0.0.1:8001** (con `127.0.0.1`, no `localhost`) y entra con Spotify.
 
 ## Uso
